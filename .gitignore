@@ -105,3 +105,4 @@ venv.bak/
 
 # project output
 out
+_test.txt
