@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import urllib.request as req
 import os, logging, sys, time, pathlib
 
 from selenium import webdriver
@@ -21,7 +20,7 @@ parser.add_argument('user', type=str, help='Name of the twitter user.',
 parser.add_argument('-f', '--file', type=str, metavar='file')
 args=parser.parse_args(sys.argv[1:])
 
-def findTweets(user, waits):
+def find_tweets(user, waits):
     """Use Selenium to scroll and find a list of tweets."""
 
     browser=webdriver.Chrome()
@@ -32,7 +31,7 @@ def findTweets(user, waits):
     except NoSuchElementException:
         pass
     else:
-        raise Exception(f"Page for user {user} not found")
+        raise Exception("Page for user {} not found".format(user))
     
     time.sleep(1)
 
@@ -48,17 +47,23 @@ def findTweets(user, waits):
 
     # find the outer div for tweets, only by requested author
     tweets=browser.find_elements_by_xpath(
-        f"//div[contains(@class, 'tweet')][@data-screen-name='{user}']")
+        "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))
     return tweets
 
 
-sltweets=findTweets(args.user, 2)
+sltweets=find_tweets(args.user, 2)
 
 # log.setLevel(logging.DEBUG)
-
-pathlib.Path("out").mkdir(exist_ok=True)
-with open("out/tweets.txt", "w") as twtf:
-
-    for slt in sltweets:
+        
+def write_tweets(twts, handle):
+    for slt in twts:
         sltext=slt.find_element_by_class_name('tweet-text')
-        twtf.write(sltext.text + '\n')
+        handle.write(sltext.text + '\n')
+    
+if args.file is not None:
+    pathlib.Path("out").mkdir(exist_ok=True)
+    with open("out/tweets.txt", "w") as twtf:
+        write_tweets(sltweets, twtf)
+else:
+    write_tweets(sltweets, sys.stdout)
+    

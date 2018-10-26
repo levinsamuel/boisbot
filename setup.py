@@ -8,5 +8,11 @@ setup(
     
     author="Sam",
     author_email="levinsamuel000@gmail.com",
-    url="https://github.com/levinsamuel/boisbot"
+    url="https://github.com/levinsamuel/boisbot",
+    install_requires=[
+        'keras',
+        'tensorflow',
+        'selenium',
+        'bs4'
+    ]
 )
