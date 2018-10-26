@@ -7,17 +7,16 @@ class Tweet:
 
     def __init__(self, soup):
     
-        if type(soup) == 'bs4.BeautifulSoup':
+        if isinstance(soup, BeautifulSoup):
             self.soup_text = soup.find(name='p', attrs={'class': 'tweet-text'})
-        elif type(soup) == 'selenium.webdriver.remote.webelement.WebElement':
+        elif isinstance(soup, WebElement):
             self.soup_text = soup.find_element_by_class_name('tweet-text')
         else:
-            raise Exception("Unsupported parser type: " + type(soup))
+            raise Exception("Unsupported parser type: {}".format(type(soup)))
         
         self.soup = soup
         self.text = self.soup_text.text
-        self.cleantext = strings.strip_url(self.text)
-
+        self.cleantext = strings.clean(strings.strip_url(self.text))
         
 def get_tweets(page):
     page=req.urlopen(url=page)

@@ -15,8 +15,12 @@ logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scraper")
 
 
-def find_tweets(user, waits):
-    """Use Selenium to scroll and find a list of tweets."""
+def find_tweets(user, seconds = 5):
+    """Use Selenium to scroll and find a list of tweets.
+
+    Options:
+        user: twitter user to search.
+        seconds: Number of seconds to keep scrolling and collecting tweets."""
 
     browser=webdriver.Chrome()
     browser.get('https://twitter.com/' + user)
@@ -32,21 +36,26 @@ def find_tweets(user, waits):
 
     body=browser.find_element_by_tag_name('body')
 
-    for i in range(waits):
-        if i > 0:
-            time.sleep(3)
+    start=time.time()
+    while time.time() < (start + seconds):
         for _ in range(5):
             body.send_keys(Keys.PAGE_DOWN)
             time.sleep(0.2)
+        time.sleep(1)
 
-
-    # find the outer div for tweets, only by requested author
-    tweets=browser.find_elements_by_xpath(
-        "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))
+    tweets=[]
+    try:
+        # find the outer div for tweets, only by requested author
+        tweets=[Tweet(html) for html in browser.find_elements_by_xpath(
+            "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))]
+    except:
+        pass
+    finally:
+        browser.quit()
+        
     return tweets
     
 def write_tweets(twts, handle):
     for slt in twts:
-        sltext=slt.find_element_by_class_name('tweet-text')
-        handle.write(sltext.text + '\n')
+        handle.write(slt.cleantext + '\n')
     
