@@ -13,6 +13,7 @@ setup(
         'keras',
         'tensorflow',
         'selenium',
+        'numpy',
         'beautifulsoup4'
     ]
 )
