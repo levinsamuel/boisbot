@@ -6,6 +6,7 @@ import logging
 import argparse
 import sys
 import pathlib
+import os
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scrape")
@@ -17,7 +18,9 @@ parser.add_argument('user', type=str, help='Name of the twitter user.',
                    metavar='user')
 parser.add_argument('-f', '--file', type=str, metavar='file')
 parser.add_argument('-s', '--seconds', type=int, metavar='seconds',
-        help='Number of seconds to keep scrolling and collecting tweets')
+        help='Number of seconds to keep scrolling and collecting tweets',
+        default=60)
+        
 log.debug("Arguments: {}", sys.argv)
 args=parser.parse_args(sys.argv[1:])
 
@@ -29,7 +32,10 @@ sltweets=scraper.find_tweets(args.user, args.seconds)
 
 if args.file is not None:
     pathlib.Path("out").mkdir(exist_ok=True)
-    with open("out/{}".format(args.file), "w") as twtf:
+    outf="out/{}".format(args.file)
+    if os.path.exists(outf):
+        os.remove(outf)
+    with open(outf, "w") as twtf:
         scraper.write_tweets(sltweets, twtf)
 else:
     scraper.write_tweets(sltweets, sys.stdout)

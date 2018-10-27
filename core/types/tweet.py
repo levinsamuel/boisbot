@@ -14,9 +14,11 @@ class Tweet:
         else:
             raise Exception("Unsupported parser type: {}".format(type(soup)))
         
-        self.soup = soup
         self.text = self.soup_text.text
-        self.cleantext = strings.clean(strings.strip_url(self.text))
+        cl=self.text
+        # not sure strip url is working well
+        # cl=strings.strip_url(cl)
+        self.cleantext = strings.clean(cl)
         
 def get_tweets(page):
     page=req.urlopen(url=page)

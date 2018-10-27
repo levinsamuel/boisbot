@@ -16,7 +16,8 @@ log = logging.getLogger("scraper")
 
 
 def find_tweets(user, seconds = 5):
-    """Use Selenium to scroll and find a list of tweets.
+    """
+    Use Selenium to scroll and find a list of tweets.
 
     Options:
         user: twitter user to search.
@@ -48,7 +49,7 @@ def find_tweets(user, seconds = 5):
         # find the outer div for tweets, only by requested author
         tweets=[Tweet(html) for html in browser.find_elements_by_xpath(
             "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))]
-    except:
+    except Exception as e:
         pass
     finally:
         browser.quit()
