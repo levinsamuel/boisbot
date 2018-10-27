@@ -29,29 +29,30 @@ def find_tweets(user, seconds = 5):
     
     try:
         browser.find_element_by_xpath("//div[@class='errorpage-body-content']/h1")
+    # Error message not found, user is found
     except NoSuchElementException:
-        pass
-    else:
-        raise Exception("Page for user {} not found".format(user))
-    
-    time.sleep(1)
-
-    body=browser.find_element_by_tag_name('body')
-
-    start=time.time()
-    while time.time() < (start + seconds):
-        for _ in range(5):
-            body.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.2)
         time.sleep(1)
 
-    tweets=[]
-    try:
-        # find the outer div for tweets, only by requested author
-        tweets=[Tweet(html) for html in browser.find_elements_by_xpath(
-            "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))]
-    except Exception as e:
-        pass
+        body=browser.find_element_by_tag_name('body')
+
+        start=time.time()
+        while time.time() < (start + seconds):
+            for _ in range(5):
+                body.send_keys(Keys.PAGE_DOWN)
+                time.sleep(0.2)
+            time.sleep(1)
+
+        tweets=[]
+        try:
+            # find the outer div for tweets, only by requested author
+            tweets=[Tweet(html) for html in browser.find_elements_by_xpath(
+                "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))]
+        except Exception as e:
+            log.error("Failed to find tweets. Error message: {}".format(e))
+            pass
+
+    else:
+        raise Exception("Page for user {} not found".format(user))
     finally:
         browser.quit()
         
