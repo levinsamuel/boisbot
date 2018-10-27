@@ -9,11 +9,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from core.types.tweet import Tweet
-import core.util.strings as strs
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scraper")
 
+# Example URL using date range search:
+# https://twitter.com/search?q=from%3Ajon_bois%20since%3A2000-01-01%20until%3A2018-06-01&src=typd
 
 def find_tweets(user, seconds = 5):
     """

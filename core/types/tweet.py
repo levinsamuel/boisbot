@@ -17,7 +17,7 @@ class Tweet:
         self.text = self.soup_text.text
         cl=self.text
         # not sure strip url is working well
-        # cl=strings.strip_url(cl)
+        cl=strings.strip_url(cl)
         self.cleantext = strings.clean(cl)
         
 def get_tweets(page):

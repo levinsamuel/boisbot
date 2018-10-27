@@ -1,6 +1,6 @@
 import re
 
-_stripurl=re.compile(pattern=r"(https?://)?\w+\.\S+")
+_stripurl=re.compile(pattern=r"https?://\w+\.\S+")
 
 _cr=re.compile(pattern=r"\r")
 _lf=re.compile(pattern=r"\n")
