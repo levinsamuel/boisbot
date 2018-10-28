@@ -1,9 +1,13 @@
+"""Tweet wrapper object for parsing html."""
+
 from bs4 import BeautifulSoup
 from selenium.webdriver.remote.webelement import WebElement
 from core.util import strings
 import urllib.request as req
 
+
 class Tweet:
+    """Tweet wrapper object for parsing html."""
 
     def __init__(self, soup):
 
@@ -25,6 +29,7 @@ class Tweet:
         # not sure strip url is working well
         cl=strings.strip_url(cl)
         self.cleantext = strings.clean(cl)
+
 
 def get_tweets(page):
     page=req.urlopen(url=page)

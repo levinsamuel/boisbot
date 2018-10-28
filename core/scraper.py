@@ -16,7 +16,9 @@ log = logging.getLogger("scraper")
 # Example URL using date range search:
 # https://twitter.com/search?q=from%3Ajon_bois%20since%3A2000-01-01%20until%3A2018-06-01&src=typd
 
-def find_tweets(user, seconds = 5):
+
+def find_tweets(user, seconds=5):
+
     """
     Use Selenium to scroll and find a list of tweets.
 
@@ -24,29 +26,30 @@ def find_tweets(user, seconds = 5):
         user: twitter user to search.
         seconds: Number of seconds to keep scrolling and collecting tweets."""
 
-    browser=webdriver.Chrome()
+    browser = webdriver.Chrome()
     browser.get('https://twitter.com/' + user)
-    
+
     try:
         browser.find_element_by_xpath("//div[@class='errorpage-body-content']/h1")
     # Error message not found, user is found
     except NoSuchElementException:
         time.sleep(1)
 
-        body=browser.find_element_by_tag_name('body')
+        body = browser.find_element_by_tag_name('body')
 
-        start=time.time()
+        start = time.time()
         while time.time() < (start + seconds):
             for _ in range(5):
                 body.send_keys(Keys.PAGE_DOWN)
                 time.sleep(0.2)
             time.sleep(1)
 
-        tweets=[]
+        tweets = []
         try:
             # find the outer div for tweets, only by requested author
-            tweets=[Tweet(html) for html in browser.find_elements_by_xpath(
-                "//div[contains(@class, 'tweet')][@data-screen-name='{}']".format(user))]
+            tweets = [Tweet(html) for html in browser.find_elements_by_xpath(
+                "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
+                format(user))]
         except Exception as e:
             log.error("Failed to find tweets. Error message: {}".format(e))
             pass
@@ -55,10 +58,10 @@ def find_tweets(user, seconds = 5):
         raise Exception("Page for user {} not found".format(user))
     finally:
         browser.quit()
-        
+
     return tweets
-    
+
+
 def write_tweets(twts, handle):
     for slt in twts:
         handle.write(slt.cleantext + '\n')
-    
