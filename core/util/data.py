@@ -1,6 +1,7 @@
 """Tools for processing data input to models."""
 
 from . import mylog
+import numpy
 
 log = mylog.get_logger('datautils')
 
@@ -43,7 +44,7 @@ Returns:
 
     # Create sub sequences of a fixed length to feed to network
     seq_length = 100
-    dataX, dataY = data.create_char_slices(inputstr, char_map, seq_length)
+    dataX, dataY = create_char_slices(inputstr, char_map, seq_length)
     n_patterns = len(dataX)
     log.debug("Total Patterns: ", n_patterns)
 
@@ -51,7 +52,5 @@ Returns:
     X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
     # normalize
     X = X / float(chardict)
-    # one hot encode the output variable
-    y = np_utils.to_categorical(dataY)
 
-    return X, y
+    return X, dataY

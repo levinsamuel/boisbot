@@ -9,25 +9,34 @@ from keras.utils import np_utils
 
 from core.util import data
 
+
 class TextGenerator():
 
-    def __init__(self):
+    def __init__(self, seq_length):
         # define the LSTM model
         self.model = Sequential()
-        model=self.model
-        model.add(LSTM(256, input_shape=(X.shape[1], X.shape[2])))
+        model = self.model
+        # Hardcode number of features to 1 for now
+        model.add(LSTM(256, input_shape=(seq_length, 1)))
         model.add(Dropout(0.2))
         model.add(Dense(y.shape[1], activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam')
 
         pathlib.Path("out/checkpoints").mkdir(exist_ok=True)
-        filepath="out/checkpoints/weights-{epoch:02d}-{loss:.4f}.hdf5"
-        checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+        filepath = "out/checkpoints/weights-{epoch:02d}-{loss:.4f}.hdf5"
+        checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
+                                     save_best_only=True, mode='min')
         self.callbacks_list = [checkpoint]
 
     def fit(self, X, y):
-        self.model.fit(X, y, epochs=20, batch_size=128, callbacks=self.callbacks_list)
+
+        # one hot encode the output variable
+        y = np_utils.to_categorical(y)
+        self.model.fit(X, y, epochs=20, batch_size=128,
+                       callbacks=self.callbacks_list)
+
 
 # Fit model
-model=TextGenerator()
-model.fit(X, y)
+seq_length = 100
+model = TextGenerator(seq_length)
+# model.fit(X, y)
