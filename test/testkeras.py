@@ -14,8 +14,11 @@ class TestKeras(unittest.TestCase):
 
     def test_create_model(self):
 
-        X, y = data.preprocess(testdata.inputstr)
+        X, y, char_map = data.preprocess(testdata.inputstr)
         y = np_utils.to_categorical(y)
         log.info("y shape: %s", y.shape)
-
-        model = kimpl.TextGenerator(100, y.shape[1])
+        self.assertEqual(len(char_map.keys()), y.shape[1],
+                         ("The number of characters in the dictionary should "
+                          "match the number number of y columns."))
+        seq_length = 100
+        model = kimpl.TextGenerator(seq_length, y.shape[1])

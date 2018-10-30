@@ -36,7 +36,8 @@ def preprocess(inputstr):
 
 Returns:
     X: The multi-dimensional input training data.
-    y: The result data class in sparse vector form.'''
+    y: The result data class in sparse vector form.
+    char_map: The map from input character to numeric code.'''
     chars = sorted(set(inputstr))
     char_map = {c: i for i, c in enumerate(chars)}
     # Number of distinct characters
@@ -53,4 +54,4 @@ Returns:
     # normalize
     X = X / float(chardict)
 
-    return X, dataY
+    return X, dataY, char_map
