@@ -33,4 +33,3 @@ class TestDataUtils(unittest.TestCase):
         X, y = data.preprocess(inputstr)
         log.debug("Output data:\nX:%s\ny:%s", X[0], y)
         log.info("Dimensions of X: %s", X.shape)
-        log.info("Dimensions of y: %s", y.shape)

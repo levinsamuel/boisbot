@@ -1,36 +1,21 @@
 """Tools for processing data input to models."""
 
 import unittest
+import core.model.keras.impl as kimpl
 from core.util import mylog, data
+from test import testdata
+from keras.utils import np_utils
 
-log = mylog.get_logger('testdatautils')
+log = mylog.get_logger('testkeras')
 log.setLevel(mylog.logging.INFO)
 
-inputstr = "yall wanna come over, play with my dog, edit a \
-documentary im making with byyourlogic \
-\ni would like to personally challenge conor mcgregor to a fight. i will \
-destroy you in combat. ive been watching a lot of mma videos lately and i \
-weigh more than you"
 
+class TestKeras(unittest.TestCase):
 
-class TestDataUtils(unittest.TestCase):
+    def test_create_model(self):
 
-    def test_create_char_slices(self):
-        # Count characters and create map to integers
+        X, y = data.preprocess(testdata.inputstr)
+        y = np_utils.to_categorical(y)
+        log.info("y shape: %s", y.shape)
 
-        log.debug("input string: %s", inputstr)
-        chars = sorted(set(inputstr))
-        char_map = {c: i for i, c in enumerate(chars)}
-        seq_length = 100
-        dataX, dataY = data.create_char_slices(inputstr, char_map, seq_length)
-        log.debug("Output data:\nX:%s\ny:%s", dataX[0], dataY)
-        log.info("Characters, seq length: %d, %d", len(inputstr), seq_length)
-        log.info("dataX dimensions: %dx%d",
-                 len(dataX), len(dataX[0]))
-
-    def test_preprocess(self):
-
-        X, y = data.preprocess(inputstr)
-        log.debug("Output data:\nX:%s\ny:%s", X[0], y)
-        log.info("Dimensions of X: %s", X.shape)
-        log.info("Dimensions of y: %s", y.shape)
+        model = kimpl.TextGenerator(100, y.shape[1])
