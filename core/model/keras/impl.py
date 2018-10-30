@@ -11,8 +11,12 @@ from core.util import data
 
 
 class TextGenerator():
+    """Class to create models that can generate text from training input."""
 
-    def __init__(self, seq_length, dictionary_size):
+    def __init__(self, seq_length, dictionary_size, weights_file=None):
+        """Create a new LSTM model. If weights_file provided, then it will
+create a pre-trained model with those weights. Otherwise it will be
+untrained."""
         # define the LSTM model
         self.model = Sequential()
         model = self.model
@@ -20,6 +24,8 @@ class TextGenerator():
         model.add(LSTM(256, input_shape=(seq_length, 1)))
         model.add(Dropout(0.2))
         model.add(Dense(dictionary_size, activation='softmax'))
+        if weights_file is not None:
+            model.load_weights(weights_file)
         model.compile(loss='categorical_crossentropy', optimizer='adam')
 
         pathlib.Path("out/checkpoints").mkdir(exist_ok=True)
@@ -29,7 +35,7 @@ class TextGenerator():
         self.callbacks_list = [checkpoint]
 
     def fit(self, X, y):
-
+        """Fit the model given training data X and expected result data y."""
         # one hot encode the output variable
         y = np_utils.to_categorical(y)
         self.model.fit(X, y, epochs=20, batch_size=128,
