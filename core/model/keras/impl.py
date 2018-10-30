@@ -1,5 +1,6 @@
 import numpy
 import pathlib
+import time
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -28,8 +29,9 @@ untrained."""
             model.load_weights(weights_file)
         model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-        pathlib.Path("out/checkpoints").mkdir(exist_ok=True)
-        filepath = "out/checkpoints/weights-{epoch:02d}-{loss:.4f}.hdf5"
+        pt = f"out/checkpoints/{int(time.time())}"
+        pathlib.Path(pt).mkdir(exist_ok=True, parents=True)
+        filepath = pt + "/weights-{epoch:02d}-{loss:.4f}.hdf5"
         checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
                                      save_best_only=True, mode='min')
         self.callbacks_list = [checkpoint]
