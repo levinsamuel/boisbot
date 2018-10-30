@@ -42,9 +42,11 @@ try:
     ind, w = -1, 100
     files = os.listdir("model")
     for i, f in enumerate(files):
-        name = f.replace('.hdf5', '').split('-')
-        loss = float(name[3])
-        ind, w = (i, loss) if name[1] == args.user and w > loss else (ind, w)
+        user = f.split('%%')
+        name = user[0].split('-')
+        loss = float(name[2])
+        log.debug("User, loss: %s, %f", user[1], loss)
+        ind, w = (i, loss) if user[1] == args.user and w > loss else (ind, w)
     if ind > -1:
         weights = files[ind]
 except FileNotFoundError:

@@ -41,7 +41,7 @@ Arguments:
         pathlib.Path(pt).mkdir(exist_ok=True, parents=True)
         filepath = "{}weights-{}-{}{}.hdf5".format(
             pt, "{epoch:02d}", "{loss:.4f}",
-            ("." + user) if user is not None else ""
+            ("%%" + user + "%%") if user is not None else ""
         )
         checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
                                      save_best_only=True, mode='min')
