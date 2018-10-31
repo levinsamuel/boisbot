@@ -30,7 +30,8 @@ def find_tweets(user, seconds=5):
     browser.get('https://twitter.com/' + user)
 
     try:
-        browser.find_element_by_xpath("//div[@class='errorpage-body-content']/h1")
+        browser.find_element_by_xpath(
+            "//div[@class='errorpage-body-content']/h1")
     # Error message not found, user is found
     except NoSuchElementException:
         time.sleep(1)
