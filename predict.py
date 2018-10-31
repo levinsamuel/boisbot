@@ -7,6 +7,9 @@ import argparse
 import core.model.keras.impl as kimpl
 import sys
 import os
+import numpy
+import math
+import logging
 
 log = mylog.get_logger("predict")
 log.setLevel(mylog.logging.DEBUG)
@@ -60,7 +63,16 @@ log.debug("Using weights file: %s", weights)
 with open(args.file) as f:
     inputstr = f.read()
 
+
 X, y, char_map = data.preprocess(inputstr)
 log.debug("X shape: %s", X.shape)
 model = kimpl.TextGenerator(X.shape[1], len(char_map.keys()),
                             "model/" + weights, user=args.user)
+
+chardict = len(char_map.keys())
+revchar_map = {i: c for c, i in char_map.items()}
+start = numpy.random.randint(0, X.shape[0]-1)
+pat = X[start]
+if log.isEnabledFor(logging.DEBUG):
+    log.debug("Pattern chosen is: %s",
+              ''.join(revchar_map[numpy.around(c[0]*chardict)] for c in pat))
