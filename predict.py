@@ -13,6 +13,7 @@ import logging
 
 log = mylog.get_logger("predict")
 log.setLevel(mylog.logging.DEBUG)
+mylog.get_logger("kerasimpl").setLevel(mylog.logging.DEBUG)
 
 # Parse arguments
 
@@ -70,9 +71,22 @@ model = kimpl.TextGenerator(X.shape[1], len(char_map.keys()),
                             "model/" + weights, user=args.user)
 
 chardict = len(char_map.keys())
+seq_length = X.shape[1]
 revchar_map = {i: c for c, i in char_map.items()}
 start = numpy.random.randint(0, X.shape[0]-1)
 pat = X[start]
 if log.isEnabledFor(logging.DEBUG):
     log.debug("Pattern chosen is: %s",
               ''.join(revchar_map[numpy.around(c[0]*chardict)] for c in pat))
+
+predicted = []
+pat = numpy.reshape(pat, (1000, 1))
+for i in range(1000):
+    predic = model.predict(numpy.array)
+    ind = numpy.argmax(predic)
+    log.debug("Predicted: %d", ind)
+    predicted.append(revchar_map[ind])
+    pat[0].append([ind/chardict])
+    pat[0] = pat[0][1:]
+
+print(''.join(predicted))

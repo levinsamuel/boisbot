@@ -53,3 +53,7 @@ Arguments:
         y = np_utils.to_categorical(y)
         self.model.fit(X, y, epochs=20, batch_size=128,
                        callbacks=self.callbacks_list)
+
+    def predict(self, val, verbose=0):
+        # @type self.model Sequential
+        return self.model.predict(val, verbose=verbose)
