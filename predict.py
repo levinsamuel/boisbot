@@ -74,20 +74,20 @@ chardict = len(char_map.keys())
 seq_length = X.shape[1]
 revchar_map = {i: c for c, i in char_map.items()}
 start = numpy.random.randint(0, X.shape[0]-1)
-pat = [numpy.reshape(X[start], (1, seq_length))[0]]
+pat = list(numpy.reshape(X[start], (1, seq_length))[0])
 if log.isEnabledFor(logging.DEBUG):
     log.debug(f"Type of pattern: {type(pat)}")
     log.debug("Pattern chosen is: %s",
-              ''.join(revchar_map[numpy.around(c[0]*chardict)] for c in pat))
+              ''.join(revchar_map[numpy.around(c*chardict)] for c in pat))
 
 predicted = []
-for i in range(1000):
+for i in range(args.noc):
     inp = numpy.reshape(pat, (1, seq_length, 1))
     predic = model.predict(inp)
     ind = numpy.argmax(predic)
-    log.debug("Predicted: %d", ind)
     predicted.append(revchar_map[ind])
-    pat[0].append([ind/chardict])
-    pat[0] = pat[0][1:]
+    pat.append(ind/chardict)
+    pat = pat[1:]
 
+# log.debug("Predicted: %d", ind)
 print(''.join(predicted))
