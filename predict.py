@@ -25,12 +25,12 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
         'user', type=str,
         help='The user to generate tweets for.',
-        metavar='twitter user')
+        metavar='twitter_user')
 
 parser.add_argument(
         'file', type=str,
         help='The file containing the original tweets that user.',
-        metavar='tweet file')
+        metavar='tweet_file')
 
 parser.add_argument(
         '-n', '--number-of-chars', type=int,
@@ -64,7 +64,7 @@ log.debug("Using weights file: %s", weights)
 with open(args.file) as f:
     inputstr = f.read()
 
-
+# X is (No. of sequences x sequence length x 1)
 X, y, char_map = data.preprocess(inputstr)
 log.debug("X shape: %s", X.shape)
 model = kimpl.TextGenerator(X.shape[1], len(char_map.keys()),
@@ -74,15 +74,16 @@ chardict = len(char_map.keys())
 seq_length = X.shape[1]
 revchar_map = {i: c for c, i in char_map.items()}
 start = numpy.random.randint(0, X.shape[0]-1)
-pat = X[start]
+pat = [numpy.reshape(X[start], (1, seq_length))[0]]
 if log.isEnabledFor(logging.DEBUG):
+    log.debug(f"Type of pattern: {type(pat)}")
     log.debug("Pattern chosen is: %s",
               ''.join(revchar_map[numpy.around(c[0]*chardict)] for c in pat))
 
 predicted = []
-pat = numpy.reshape(pat, (1000, 1))
 for i in range(1000):
-    predic = model.predict(numpy.array)
+    inp = numpy.reshape(pat, (1, seq_length, 1))
+    predic = model.predict(inp)
     ind = numpy.argmax(predic)
     log.debug("Predicted: %d", ind)
     predicted.append(revchar_map[ind])
