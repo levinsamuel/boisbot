@@ -106,3 +106,10 @@ venv.bak/
 # project output
 out
 _test.txt
+
+## END PYTHON
+
+## UI/NPM/NODE
+node_modules
+*.css
+
