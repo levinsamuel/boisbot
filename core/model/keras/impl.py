@@ -57,11 +57,11 @@ Arguments:
                                          save_best_only=True, mode='min')
             self.callbacks_list = [checkpoint]
 
-    def fit(self, X, y):
+    def fit(self, X, y, epochs=20, batch_size=128):
         """Fit the model given training data X and expected result data y."""
         # one hot encode the output variable
         y = np_utils.to_categorical(y)
-        self.model.fit(X, y, epochs=20, batch_size=128,
+        self.model.fit(X, y, epochs=epochs, batch_size=batch_size,
                        callbacks=self.callbacks_list)
 
     def predict(self, val, verbose=0):

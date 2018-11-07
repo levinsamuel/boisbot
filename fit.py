@@ -28,6 +28,15 @@ parser.add_argument(
         '-l', '--length', type=int, help='Length of the input sequences.',
         metavar='sequence_length', dest='seql', default=100)
 
+parser.add_argument(
+        '-e', '--epochs', type=int, help='Number of training epochs.',
+        metavar='epochs', dest='epochs', default=20)
+
+parser.add_argument(
+        '-b', '--batch-size', type=int,
+        help='Number of samples to take each time updating gradient',
+        metavar='batch_size', dest='bs', default=128)
+
 log.debug("Arguments: {}", sys.argv)
 args = parser.parse_args(sys.argv[1:])
 
@@ -41,4 +50,4 @@ X, y, char_map = data.preprocess(inputdata)
 import core.model.keras.impl as kimpl
 model = kimpl.TextGenerator(args.seql, len(char_map.keys()),
                             layers=2)
-model.fit(X, y)
+model.fit(X, y, epochs=args.epochs, batch_size=args.bs)
