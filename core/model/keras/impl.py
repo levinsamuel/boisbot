@@ -18,7 +18,7 @@ class TextGenerator():
     """Class to create models that can generate text from training input."""
 
     def __init__(self, seq_length, dictionary_size, weights_file=None,
-                 user=None):
+                 user=None, layers=1):
         """Create a new LSTM model. If weights_file provided, then it will
 create a pre-trained model with those weights. Otherwise it will be
 untrained.
@@ -29,23 +29,31 @@ Arguments:
         self.model = Sequential()
         model = self.model
         # Hardcode number of features to 1 for now
-        model.add(LSTM(256, input_shape=(seq_length, 1)))
-        model.add(Dropout(0.2))
+        assert layers > 0
+        is = (seq_length, 1)
+        for i in range(layers):
+            model.add(LSTM(256, input_shape=is))
+            model.add(Dropout(0.2))
+            # only add shape to first layer
+            is = None;
         model.add(Dense(dictionary_size, activation='softmax'))
         if weights_file is not None:
             log.debug("Loading weights from file: %s", weights_file)
             model.load_weights(weights_file)
         model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-        pt = f"out/checkpoints/{int(time.time())}/"
-        pathlib.Path(pt).mkdir(exist_ok=True, parents=True)
-        filepath = "{}weights-{}-{}{}.hdf5".format(
-            pt, "{epoch:02d}", "{loss:.4f}",
-            ("%%" + user + "%%") if user is not None else ""
-        )
-        checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
-                                     save_best_only=True, mode='min')
-        self.callbacks_list = [checkpoint]
+        if weights_file is None:
+            # If no weights, model needs to be trained, configure
+            # for training, create checkpoints.
+            pt = f"out/checkpoints/{int(time.time())}/"
+            pathlib.Path(pt).mkdir(exist_ok=True, parents=True)
+            filepath = "{}weights-{}-{}{}.hdf5".format(
+                pt, "{epoch:02d}", "{loss:.4f}",
+                ("%%" + user + "%%") if user is not None else ""
+            )
+            checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
+                                         save_best_only=True, mode='min')
+            self.callbacks_list = [checkpoint]
 
     def fit(self, X, y):
         """Fit the model given training data X and expected result data y."""
