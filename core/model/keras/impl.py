@@ -30,12 +30,14 @@ Arguments:
         model = self.model
         # Hardcode number of features to 1 for now
         assert layers > 0
-        is = (seq_length, 1)
+        insh = (seq_length, 1)
         for i in range(layers):
-            model.add(LSTM(256, input_shape=is))
+            if i == 0:
+                model.add(LSTM(256, input_shape=insh, return_sequences=True))
+            else:
+                model.add(LSTM(256))
             model.add(Dropout(0.2))
             # only add shape to first layer
-            is = None;
         model.add(Dense(dictionary_size, activation='softmax'))
         if weights_file is not None:
             log.debug("Loading weights from file: %s", weights_file)
