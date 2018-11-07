@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lite": "lite-server",
-    "start": "run-p watch:scss lite",
+    "start": "npm run scss && run-p watch:scss lite",
     "watch:scss": "onchange \"css/*.scss\" -- npm run scss",
     "scss": "node-sass -o css/ css/"
   },

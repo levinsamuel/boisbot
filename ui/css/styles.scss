@@ -1,11 +1,15 @@
 $header-color: #1e90ff;
 
-.jumbotron {
+@mixin bluetheme {
   background: $header-color;
+  color: white;
+}
+
+.jumbotron {
+  @include bluetheme();
 }
 
 .footer {
-  background: $header-color;
+  @include bluetheme();
   padding: 2rem;
-  color: white;
 }
