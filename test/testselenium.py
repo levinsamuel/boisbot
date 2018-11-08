@@ -2,18 +2,23 @@ import unittest
 from core.util import strings, mylog
 from core import scraper
 from core.types.tweet import Tweet
+import os
 
 log = mylog.get_logger("testselenium")
+sclog = scraper.log;
+sclog.setLevel(mylog.logging.DEBUG)
 #log.setLevel(mylog.logging.DEBUG)
 
 class SeleniumTest(unittest.TestCase):
-    
+
     def test_parse(self):
-        
-        tweets=scraper.find_tweets("deepestcat")
+
+        user = os.environ.get("TWUSER", "deepestcat")
+        sc = int(os.environ.get("SECONDS", 5))
+        tweets = scraper.find_tweets(user, seconds=sc)
         log.debug("Tweets: %s", tweets)
         self.assertTrue(tweets is not None and len(tweets) > 0)
-        
+
         tweet=tweets[0]
         # @type tweet Tweet
         log.debug(tweet.cleantext)

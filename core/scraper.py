@@ -7,6 +7,9 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from core.types.tweet import Tweet
 
@@ -28,6 +31,7 @@ def find_tweets(user, seconds=5):
 
     browser = webdriver.Chrome()
     browser.get('https://twitter.com/' + user)
+    log.debug("Browser size: %s", browser.get_window_rect())
 
     try:
         browser.find_element_by_xpath(
@@ -36,14 +40,35 @@ def find_tweets(user, seconds=5):
     except NoSuchElementException:
         time.sleep(1)
 
+
         body = browser.find_element_by_tag_name('body')
 
+        twlist = WebDriverWait(
+                    browser, 10).until(
+                        EC.presence_of_element_located(
+                            (By.ID, 'stream-items-id')
+                        )
+                    )
+
+        visible = len(twlist.find_elements_by_tag_name('li'));
+        log.debug("number of visible tweets: %d", visible)
         start = time.time()
+        lastvis = []
         while time.time() < (start + seconds):
+            lastvis.append(visible)
             for _ in range(5):
                 body.send_keys(Keys.PAGE_DOWN)
                 time.sleep(0.2)
             time.sleep(1)
+            visible = len(twlist.find_elements_by_tag_name('li'));
+            if len(lastvis) > 5:
+                # If last five tweet counts are the same, conclude feed is done
+                v = lastvis.pop(0)
+                if v == visible:
+                    log.info('No more tweets are loading. Exiting.')
+                    break
+
+        log.debug("tw length: %d", visible)
 
         tweets = []
         try:
