@@ -8,7 +8,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
-from core.types.tweet import Tweet
+from core.types import Tweet
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scraper")

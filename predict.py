@@ -3,6 +3,7 @@
 
 from core import scraper
 from core.util import mylog, data
+from core.types import Tweet, WeightsFile
 import argparse
 import core.model.keras.impl as kimpl
 import sys
@@ -46,11 +47,8 @@ try:
     ind, w = -1, 100
     files = os.listdir("model")
     for i, f in enumerate(files):
-        user = f.split('%%')
-        name = user[0].split('-')
-        loss = float(name[2])
-        log.debug("User, loss: %s, %f", user[1], loss)
-        ind, w = (i, loss) if user[1] == args.user and w > loss else (ind, w)
+        wf = WeightsFile(f)
+        ind, w = (i, wf.loss) if wf.user == args.user and w > wf.loss else (ind, w)
     if ind > -1:
         weights = files[ind]
 except FileNotFoundError:

@@ -1,9 +1,27 @@
-"""Tweet wrapper object for parsing html."""
+"""Types for use in project"""
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.remote.webelement import WebElement
 from core.util import strings
 import urllib.request as req
+import os
+
+
+class WeightsFile:
+
+    def __init__(self, filename):
+
+        user = filename.split('%%')
+        name = user[0].split('-')
+        self.loss = float(name[2])
+        self.epoch = int(name[1])
+        self.user = None if len(user) == 0 else user[1]
+        self.name = filename
+        log.debug("User, loss: %s, %f", self.user, self.loss)
+
+    @staticmethod
+    def is_weights_file(f):
+        return f.startswith("weights")
 
 
 class Tweet:
