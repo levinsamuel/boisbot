@@ -42,4 +42,4 @@ class TestKeras(unittest.TestCase):
         weights_file = TextGenerator.find_best_weight(cpath)
         log.info("Weights file: %s", weights_file)
 
-        self.assertEqual(lastwf, cpath + weights_file)
+        self.assertEqual(lastwf, weights_file)

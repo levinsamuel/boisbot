@@ -15,7 +15,7 @@ from core.types import WeightsFile
 log = mylog.get_logger("kerasimpl")
 log.setLevel(mylog.logging.INFO)
 
-checkpoint_path = "out/checkpoints/inprocess/"
+checkpoint_path_default = "out/checkpoints"
 
 
 class TextGenerator():
@@ -23,13 +23,15 @@ class TextGenerator():
     """Class to create models that can generate text from training input."""
 
     def __init__(self, seq_length, dictionary_size, weights_file=None,
-                 user=None, layers=1):
+                 user=None, layers=1, checkpoint_path=checkpoint_path_default):
         """Create a new LSTM model. If weights_file provided, then it will
 create a pre-trained model with those weights. Otherwise it will be
 untrained.
 
 Arguments:
     user: The user this model is created for."""
+
+        self.checkpoint_path = checkpoint_path + "/inprocess"
         # define the LSTM model
         self.model = Sequential()
         model = self.model
@@ -52,8 +54,11 @@ Arguments:
         if weights_file is None:
             # If no weights, model needs to be trained, configure
             # for training, create checkpoints.
-            pathlib.Path(checkpoint_path).mkdir(exist_ok=True, parents=True)
-            filepath = TextGenerator.get_checkpoint_path(checkpoint_path, user)
+            pathlib.Path(self.checkpoint_path). \
+                    mkdir(exist_ok=True, parents=True)
+            filepath = TextGenerator.get_checkpoint_file(
+                    self.checkpoint_path, user)
+
             checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
                                          save_best_only=True, mode='min')
             self.callbacks_list = [checkpoint]
@@ -67,7 +72,7 @@ Arguments:
     def fit(self, X, y, epochs=20, batch_size=128):
         """Fit the model given training data X and expected result data y."""
 
-        weights_file = find_best_weight(checkpoint_path)
+        weights_file = TextGenerator.find_best_weight(self.checkpoint_path)
         if weights_file is not None:
             self.load_weights(weights_file)
         # one hot encode the output variable
@@ -75,9 +80,24 @@ Arguments:
         self.model.fit(X, y, epochs=epochs, batch_size=batch_size,
                        callbacks=self.callbacks_list)
 
+        self.cleanup(self.checkpoint_path)
+
     def predict(self, val, verbose=0):
         # @type self.model Sequential
         return self.model.predict(val, verbose=verbose)
+
+    def cleanup(self, cpath):
+        """Move best weight to done directory and cleanup in process dir"""
+
+        finished_weights = TextGenerator.find_best_weight(self.checkpoint_path)
+        done = finished_weights.replace('inprocess', 'done')
+        log.debug("Moving best weight (%s) to done folder: %s",
+                  finished_weights, done)
+
+        os.renames(finished_weights, done)
+        if pathlib.Path(done).exists():
+            # TODO remove in process Files
+            pass
 
     @staticmethod
     def find_best_weight(path):
@@ -94,12 +114,12 @@ Arguments:
                         weights_file = wf.name
                         loss = wf.loss
 
-        return weights_file
+        return path + "/" + weights_file
 
     @staticmethod
-    def get_checkpoint_path(cpath, user=None):
+    def get_checkpoint_file(cpath, user=None):
         """Get the path to the checkpoint file"""
-        filepath = "{}weights-{}-{}{}.hdf5".format(
+        filepath = "{}/weights-{}-{}{}.hdf5".format(
             cpath, "{epoch:02d}", "{loss:.4f}",
             ("%%" + user + "%%") if user is not None else ""
         )
