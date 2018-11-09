@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
-from core.types.tweet import Tweet
+from core.types import Tweet
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scraper")

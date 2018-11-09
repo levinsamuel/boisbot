@@ -1,7 +1,7 @@
 import unittest
 from core.util import strings, mylog
 from core import scraper
-from core.types.tweet import Tweet
+from core.types import Tweet
 import os
 
 log = mylog.get_logger("testselenium")
