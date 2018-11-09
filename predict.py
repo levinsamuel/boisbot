@@ -48,7 +48,9 @@ try:
     files = os.listdir("model")
     for i, f in enumerate(files):
         wf = WeightsFile(f)
-        ind, w = (i, wf.loss) if wf.user == args.user and w > wf.loss else (ind, w)
+        ind, w = (i, wf.loss) \
+            if wf.user == args.user and w > wf.loss \
+            else (ind, w)
     if ind > -1:
         weights = files[ind]
 except FileNotFoundError:

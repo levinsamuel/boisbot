@@ -2,22 +2,26 @@
 
 from bs4 import BeautifulSoup
 from selenium.webdriver.remote.webelement import WebElement
-from core.util import strings
+from core.util import strings, mylog
 import urllib.request as req
 import os
+
+log = mylog.get_logger("types")
 
 
 class WeightsFile:
 
     def __init__(self, filename):
 
-        user = filename.split('%%')
+        noext = filename.rpartition('.')[0]
+        user = noext.split('%%')
         name = user[0].split('-')
         self.loss = float(name[2])
         self.epoch = int(name[1])
-        self.user = None if len(user) == 0 else user[1]
+        self.user = None if len(user) == 1 else user[1]
         self.name = filename
-        log.debug("User, loss: %s, %f", self.user, self.loss)
+        log.debug("User, loss, epoch: %s, %f, %d",
+                  self.user, self.loss, self.epoch)
 
     @staticmethod
     def is_weights_file(f):

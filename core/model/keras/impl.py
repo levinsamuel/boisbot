@@ -53,10 +53,7 @@ Arguments:
             # If no weights, model needs to be trained, configure
             # for training, create checkpoints.
             pathlib.Path(checkpoint_path).mkdir(exist_ok=True, parents=True)
-            filepath = "{}weights-{}-{}{}.hdf5".format(
-                checkpoint_path, "{epoch:02d}", "{loss:.4f}",
-                ("%%" + user + "%%") if user is not None else ""
-            )
+            filepath = TextGenerator.get_checkpoint_path(checkpoint_path, user)
             checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
                                          save_best_only=True, mode='min')
             self.callbacks_list = [checkpoint]
@@ -95,5 +92,15 @@ Arguments:
                     wf = WeightsFile(f)
                     if wf.loss < loss:
                         weights_file = wf.name
+                        loss = wf.loss
 
         return weights_file
+
+    @staticmethod
+    def get_checkpoint_path(cpath, user=None):
+        """Get the path to the checkpoint file"""
+        filepath = "{}weights-{}-{}{}.hdf5".format(
+            cpath, "{epoch:02d}", "{loss:.4f}",
+            ("%%" + user + "%%") if user is not None else ""
+        )
+        return filepath
