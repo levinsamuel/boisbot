@@ -5,7 +5,7 @@ import pathlib
 import shutil
 from core.model.keras.impl import TextGenerator
 from core.util import mylog, data
-from core import types
+from core.types import WeightsFile
 from test import testdata
 from keras.utils import np_utils
 
@@ -33,7 +33,7 @@ class TestKeras(unittest.TestCase):
         shutil.rmtree(cpath, ignore_errors=True)
         pathlib.Path(cpath).mkdir(exist_ok=True, parents=True)
         for i in range(20):
-            fn = TextGenerator.get_checkpoint_path(cpath)
+            fn = WeightsFile.get_checkpoint_file(cpath)
             fn = fn.replace("{epoch:02d}", str(i)) \
                    .replace("{loss:.4f}", str((20-i)/10))
             lastwf = fn

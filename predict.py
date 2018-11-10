@@ -5,7 +5,7 @@ from core import scraper
 from core.util import mylog, data
 from core.types import Tweet, WeightsFile
 import argparse
-import core.model.keras.impl as kimpl
+from core.model.keras.impl import TextGenerator
 import sys
 import os
 import numpy
@@ -67,7 +67,7 @@ with open(args.file) as f:
 # X is (No. of sequences x sequence length x 1)
 X, y, char_map = data.preprocess(inputstr)
 log.debug("X shape: %s", X.shape)
-model = kimpl.TextGenerator(X.shape[1], len(char_map.keys()),
+model = TextGenerator(X.shape[1], len(char_map.keys()),
                             "model/" + weights, user=args.user)
 
 chardict = len(char_map.keys())

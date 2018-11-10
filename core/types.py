@@ -11,17 +11,52 @@ log = mylog.get_logger("types")
 
 class WeightsFile:
 
-    def __init__(self, filename):
+    def __init__(self, filename=None, layers=2, user=None):
 
-        noext = filename.rpartition('.')[0]
-        user = noext.split('%%')
-        name = user[0].split('-')
-        self.loss = float(name[2])
-        self.epoch = int(name[1])
-        self.user = None if len(user) == 1 else user[1]
-        self.name = filename
+        if filename is not None:
+            fp = filename.rpartition('/')
+            noext = fp[2].rpartition('.')[0]
+            user = noext.split('%%')
+            name = user[0].split('-')
+            self.loss = float(name[2])
+            self.epoch = int(name[1])
+            if len(name) > 3:
+                self.layers = int(name[3])
+            self.user = None if len(user) == 1 else user[1]
+            self.name = fp[2]
+            self.path = fp[0]
+        else:
+            self.loss = "{loss:.4f}"
+            self.epoch = "{epoch:02d}"
+            self.user = user
+            self.layers = layers
+            self.path = None
+
         log.debug("User, loss, epoch: %s, %f, %d",
                   self.user, self.loss, self.epoch)
+
+    def create_filename(self):
+        """Get the file name for this weights file."""
+        return WeightsFile._get_checkpoint_file(
+            self.path, self.user, self.epoch, self.loss, self.layers
+        )
+
+    @staticmethod
+    def get_checkpoint_file(cpath=None, layers=2, user=None):
+        """Get the template name for the weight file."""
+
+        wf = WeightsFile(None, layers, user)
+        wf.path = cpath
+        return wf.create_filename()
+
+    def _get_checkpoint_file(cpath=None, user=None, *args):
+        """Get the path to the checkpoint file"""
+        filepath = "{}weights-{}{}.hdf5".format(
+            (cpath + "/") if cpath is not None else "",
+            '-'.join(str(a) for a in args),
+            ("%%" + user + "%%") if user is not None else ""
+        )
+        return filepath
 
     @staticmethod
     def is_weights_file(f):

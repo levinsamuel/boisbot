@@ -56,7 +56,7 @@ Arguments:
             # for training, create checkpoints.
             pathlib.Path(self.checkpoint_path). \
                     mkdir(exist_ok=True, parents=True)
-            filepath = TextGenerator.get_checkpoint_file(
+            filepath = WeightsFile.get_checkpoint_file(
                     self.checkpoint_path, user)
 
             checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
@@ -67,7 +67,7 @@ Arguments:
         """Load weights from weights file path as a string."""
 
         log.debug("Loading weights from file: %s", weights_file)
-        model.load_weights(weights_file)
+        self.model.load_weights(weights_file)
 
     def fit(self, X, y, epochs=20, batch_size=128):
         """Fit the model given training data X and expected result data y."""
@@ -115,12 +115,3 @@ Arguments:
                         loss = wf.loss
 
         return path + "/" + weights_file
-
-    @staticmethod
-    def get_checkpoint_file(cpath, user=None):
-        """Get the path to the checkpoint file"""
-        filepath = "{}/weights-{}-{}{}.hdf5".format(
-            cpath, "{epoch:02d}", "{loss:.4f}",
-            ("%%" + user + "%%") if user is not None else ""
-        )
-        return filepath
