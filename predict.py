@@ -5,7 +5,6 @@ from core import scraper
 from core.util import mylog, data
 from core.types import Tweet, WeightsFile
 import argparse
-from core.model.keras.impl import TextGenerator
 import sys
 import os
 import numpy
@@ -64,11 +63,14 @@ log.debug("Using weights file: %s", weights)
 with open(args.file) as f:
     inputstr = f.read()
 
+# import down here because this import takes time
+from core.model.keras.impl import TextGenerator
+
 # X is (No. of sequences x sequence length x 1)
 X, y, char_map = data.preprocess(inputstr)
 log.debug("X shape: %s", X.shape)
 model = TextGenerator(X.shape[1], len(char_map.keys()),
-                            "model/" + weights, user=args.user)
+                      "model/" + weights, user=args.user)
 
 chardict = len(char_map.keys())
 seq_length = X.shape[1]

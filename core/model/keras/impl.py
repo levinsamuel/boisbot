@@ -29,14 +29,24 @@ create a pre-trained model with those weights. Otherwise it will be
 untrained.
 
 Arguments:
-    user: The user this model is created for."""
+    user: The user this model is created for.
+    layers: The number of intermediate layers to create."""
 
         self.checkpoint_path = checkpoint_path + "/inprocess"
         # define the LSTM model
         self.model = Sequential()
         model = self.model
-        # Hardcode number of features to 1 for now
+
+        # If weights file provided, load layers from that file.
+        if weights_file is not None:
+            wf = WeightsFile(weights_file)
+            # The number of intermediate layers don't count the file layer.
+            layers = wf.layers - 1
+            log.debug(("Weights file detected: %s. "
+                       "Loading layers from that file: %d"),
+                      weights_file, layers)
         assert layers > 0
+        # Hardcode number of features to 1 for now
         insh = (seq_length, 1)
         for i in range(layers):
             if i == 0:
