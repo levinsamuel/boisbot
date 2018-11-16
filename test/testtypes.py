@@ -1,6 +1,7 @@
 from core.types import WeightsFile
 import unittest
 from core.util import mylog
+import datetime as dt
 
 log = mylog.get_logger('testtypes')
 log.setLevel(mylog.logging.DEBUG)
@@ -14,3 +15,11 @@ class TestTypes(unittest.TestCase):
 
         wf = WeightsFile(None, None, "jb")
         log.debug("filename: %s", wf.create_filename())
+
+
+    def test_dates(self):
+
+        mytime = 1542395192
+        mydt = dt.date.fromtimestamp(mytime)
+        log.debug("formatted date: %s", mydt.isoformat())
+        self.assertEqual('2018-11-16', mydt.isoformat())

@@ -5,6 +5,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from core.util import strings, mylog
 import urllib.request as req
 import os
+import datetime as dt
 
 log = mylog.get_logger("types")
 
@@ -86,6 +87,8 @@ class Tweet:
         # not sure strip url is working well
         cl = strings.strip_url(cl)
         self.cleantext = strings.clean(cl)
+        # create a date from the timestamp
+        self.date = dt.date.fromtimestamp(self.time)
 
 
 def get_tweets(page):
