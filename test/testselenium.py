@@ -2,6 +2,7 @@ import unittest
 from core.util import strings, mylog
 from core import scraper
 from core.types import Tweet
+from core.util.selenium import TweetFinder
 import os
 
 log = mylog.get_logger("testselenium")
@@ -23,3 +24,11 @@ class SeleniumTest(unittest.TestCase):
         # @type tweet Tweet
         log.debug(tweet.cleantext)
         log.debug(tweet.time)
+
+    def test_not_found(self):
+
+        with TweetFinder() as tf:
+
+            # user does not exist
+            self.assertFalse(tf.search_tweets("jon_boisssssss"))
+            

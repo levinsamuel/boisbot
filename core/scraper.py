@@ -28,9 +28,7 @@ def find_tweets(user, seconds=5):
 
     with TweetFinder() as finder:
 
-        finder.search_tweets(user)
-
-        if finder.user_found():
+        if finder.search_tweets(user):
 
             time.sleep(1)
 

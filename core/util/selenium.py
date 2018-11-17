@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 
 from core.types import Tweet
 from core.util import mylog
@@ -29,7 +29,10 @@ class TweetFinder:
 
     def search_tweets(self, user, date_before=None):
         """Direct the browser to the tweets by the given user from before the
-    given date."""
+given date.
+
+Returns:
+    True if tweets by this user are found, False if not."""
 
     #https://twitter.com/search?f=tweets&q=from%3Ajon_bois%20-filter%3Aretweets%20-filter%3Areplies&src=typd
 
@@ -41,12 +44,16 @@ class TweetFinder:
 
         log.debug("Querying URL: %s", url)
         self.browser.get(url)
-        self.twlist = WebDriverWait(
-                self.browser, 10).until(
-                    EC.presence_of_element_located(
-                        (By.ID, 'stream-items-id')
+        try:
+            self.twlist = WebDriverWait(
+                    self.browser, 3).until(
+                        EC.presence_of_element_located(
+                            (By.ID, 'stream-items-id')
+                        )
                     )
-                )
+            return True
+        except TimeoutException:
+            return False
 
     def count_visible_tweets(self):
 
@@ -64,15 +71,6 @@ class TweetFinder:
         tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
             "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
             format(user))]
+        tweets.sort(key=lambda t: t.time)
 
         return tweets
-
-    def user_found(self):
-
-        try:
-            self.browser.find_element_by_xpath(
-                "//div[@class='errorpage-body-content']/h1")
-            return False;
-        # Error message not found, user is found
-        except NoSuchElementException:
-            return True;
