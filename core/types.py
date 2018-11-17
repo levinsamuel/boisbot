@@ -67,6 +67,8 @@ class WeightsFile:
 class Tweet:
     """Tweet wrapper object for parsing html."""
 
+    log = mylog.get_logger("Tweet")
+
     def __init__(self, soup):
 
         if isinstance(soup, BeautifulSoup):
@@ -76,17 +78,19 @@ class Tweet:
                             findChild(name='span').attrs['data-time'])
         elif isinstance(soup, WebElement):
             self.soup_text = soup.find_element_by_class_name('tweet-text')
-            self.time = int(soup.find_element_by_xpath(
-                                "//small[@class='time']/a/span"
-                            ).get_attribute("data-time"))
+            self.time = int(soup.find_element_by_class_name('time').
+                            find_element_by_tag_name('span').
+                            get_attribute("data-time"))
         else:
             raise Exception("Unsupported parser type: {}".format(type(soup)))
 
+        Tweet.log.debug("read time: %d", self.time)
         self.text = self.soup_text.text
         cl = self.text
         # not sure strip url is working well
         cl = strings.strip_url(cl)
         self.cleantext = strings.clean(cl)
+        Tweet.log.debug("read text: %s", self.cleantext)
         # create a date from the timestamp
         self.date = dt.date.fromtimestamp(self.time)
 

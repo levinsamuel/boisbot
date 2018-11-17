@@ -31,6 +31,10 @@ class TweetFinder:
         """Direct the browser to the tweets by the given user from before the
 given date.
 
+Parameters:
+    user: find tweets by this user.
+    date_before: datetime object, find tweets before this date.
+
 Returns:
     True if tweets by this user are found, False if not."""
 
@@ -66,11 +70,12 @@ Returns:
     def find_tweets_in_view(self, user):
         """Get the tweet objects from all tweets currently in the view.
 
-    Returns: an array of core.types.Tweet objects."""
+    Returns: an array of core.types.Tweet objects, in newest-first order."""
 
         tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
             "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
             format(user))]
-        tweets.sort(key=lambda t: t.time)
+        # Sort tweets in newest-first order, since they are read in that order
+        tweets.sort(key=lambda t: t.time, reverse=True)
 
         return tweets

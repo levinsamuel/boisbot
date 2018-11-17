@@ -1,14 +1,17 @@
 import unittest
+import os
+import time
+import datetime as dt
+
 from core.util import strings, mylog
 from core import scraper
 from core.types import Tweet
 from core.util.selenium import TweetFinder
-import os
 
 log = mylog.get_logger("testselenium")
 sclog = scraper.log;
 sclog.setLevel(mylog.logging.DEBUG)
-#log.setLevel(mylog.logging.DEBUG)
+log.setLevel(mylog.logging.DEBUG)
 
 class SeleniumTest(unittest.TestCase):
 
@@ -31,4 +34,24 @@ class SeleniumTest(unittest.TestCase):
 
             # user does not exist
             self.assertFalse(tf.search_tweets("jon_boisssssss"))
-            
+
+
+class SeleniumTestLong(unittest.TestCase):
+
+    def test_limit(self):
+
+        # Tweet.log.setLevel(mylog.logging.DEBUG)
+        secs = 900
+        start = time.time()
+        numtw = 0
+        for tl in scraper.find_tweets("jon_bois", seconds=secs, batch_size=250):
+            mx = max(t.time for t in tl)
+            mn = min(t.time for t in tl)
+            log.debug("earliest tweet date: %s", dt.date.fromtimestamp(mn))
+            log.debug("latest tweet date: %s", dt.date.fromtimestamp(mx))
+            numtw += len(tl)
+
+        end = time.time()
+
+        log.info("Ran for %d out of %d seconds.", int(end - start), secs)
+        log.info("Found %d tweets.", numtw)
