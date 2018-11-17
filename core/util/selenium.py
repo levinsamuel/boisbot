@@ -19,11 +19,13 @@ class TweetFinder:
         self.browser = webdriver.Chrome()
 
     def __enter__(self):
-        pass
+        return self
 
-    def __exit__(self):
+    def __exit__(self, *args):
         self.browser.quit()
 
+    def get_body(self):
+        return self.browser.find_element_by_tag_name('body')
 
     def search_tweets(self, user, date_before=None):
         """Direct the browser to the tweets by the given user from before the
@@ -39,33 +41,36 @@ class TweetFinder:
 
         log.debug("Querying URL: %s", url)
         self.browser.get(url)
-
-
-    def get_tw_list(browser):
-        """Get the tweet list, waiting first until it is loaded in  the page."""
-        twlist = WebDriverWait(
-                browser, 10).until(
+        self.twlist = WebDriverWait(
+                self.browser, 10).until(
                     EC.presence_of_element_located(
                         (By.ID, 'stream-items-id')
                     )
                 )
-        return twlist
 
-    def find_tweets_in_view(browser, user):
+    def count_visible_tweets(self):
+
+        try:
+            return len(self.twlist.find_elements_by_class_name('stream-item'))
+        except AttributeError:
+            log.error("Browser has no visible tweets.")
+            raise
+
+    def find_tweets_in_view(self, user):
         """Get the tweet objects from all tweets currently in the view.
 
     Returns: an array of core.types.Tweet objects."""
 
-        tweets = [Tweet(html) for html in browser.find_elements_by_xpath(
+        tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
             "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
             format(user))]
 
         return tweets
 
-    def user_found(browser):
+    def user_found(self):
 
         try:
-            browser.find_element_by_xpath(
+            self.browser.find_element_by_xpath(
                 "//div[@class='errorpage-body-content']/h1")
             return False;
         # Error message not found, user is found

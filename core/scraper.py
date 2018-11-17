@@ -8,7 +8,7 @@ import time
 from selenium.webdriver.common.keys import Keys
 
 from core.types import Tweet
-import core.util.selenium as su
+from core.util.selenium import TweetFinder
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger("scraper")
@@ -25,21 +25,18 @@ def find_tweets(user, seconds=5):
         user: twitter user to search.
         seconds: Number of seconds to keep scrolling and collecting tweets."""
 
-    try:
 
-        browser = webdriver.Chrome()
-        su.search_tweets(browser, user)
-        log.debug("Browser size: %s", browser.get_window_rect())
+    with TweetFinder() as finder:
 
-        if su.user_found(browser):
+        finder.search_tweets(user)
+
+        if finder.user_found():
 
             time.sleep(1)
 
-            body = browser.find_element_by_tag_name('body')
+            body = finder.get_body()
 
-            twlist = su.get_tw_list(browser);
-
-            visible = len(twlist.find_elements_by_tag_name('li'));
+            visible = finder.count_visible_tweets();
             log.debug("number of visible tweets: %d", visible)
             start = time.time()
             lastvis = []
@@ -49,7 +46,7 @@ def find_tweets(user, seconds=5):
                     body.send_keys(Keys.PAGE_DOWN)
                     time.sleep(0.2)
                 time.sleep(1)
-                visible = len(twlist.find_elements_by_tag_name('li'));
+                visible = finder.count_visible_tweets();
                 if len(lastvis) > 5:
                     # If last five tweet counts are the same, conclude feed is done
                     v = lastvis.pop(0)
@@ -59,19 +56,15 @@ def find_tweets(user, seconds=5):
 
             log.debug("tw length: %d", visible)
 
-            tweets = []
             try:
                 # find the outer div for tweets, only by requested author
-                tweets = su.find_tweets_in_view(browser, user);
+                tweets = finder.find_tweets_in_view(user);
             except Exception as e:
                 log.error("Failed to find tweets. Error message: {}".format(e))
                 pass
 
         else:
             raise Exception("Page for user {} not found".format(user))
-
-    finally:
-        browser.quit()
 
     return tweets
 
