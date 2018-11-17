@@ -19,7 +19,7 @@ class SeleniumTest(unittest.TestCase):
 
         user = os.environ.get("TWUSER", "deepestcat")
         sc = int(os.environ.get("SECONDS", 5))
-        tweets = scraper.find_tweets(user, seconds=sc)
+        tweets = [t for tl in scraper.find_tweets(user, seconds=sc) for t in tl]
         log.debug("Tweets: %s", tweets)
         self.assertTrue(tweets is not None and len(tweets) > 0)
 
@@ -35,6 +35,11 @@ class SeleniumTest(unittest.TestCase):
             # user does not exist
             self.assertFalse(tf.search_tweets("jon_boisssssss"))
 
+    def test_end_when_none_found(self):
+
+        tweets = [t for tl in scraper.find_tweets('deepestcat', seconds=60)\
+                  for t in tl]
+        log.debug("Found %d", len(tweets))
 
 class SeleniumTestLong(unittest.TestCase):
 

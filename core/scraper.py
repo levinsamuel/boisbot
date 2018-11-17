@@ -36,60 +36,67 @@ intensive, so it is recommended to read and print them in batches."""
         start = time.time()
         before = dt.date.fromtimestamp(start)
 
+        if not finder.search_tweets(user):
+
+            raise Exception("Page for user {} not found".format(user))
+
         while time.time() < (start + seconds):
 
-            if finder.search_tweets(user, date_before=before):
+            time.sleep(1)
 
+            body = finder.get_body()
+
+            visible = finder.count_visible_tweets();
+            log.debug("number of visible tweets: %d", visible)
+            lastvis = []
+            while True:
+                lastvis.append(visible)
+                for _ in range(5):
+                    body.send_keys(Keys.PAGE_DOWN)
+                    time.sleep(0.2)
                 time.sleep(1)
-
-                body = finder.get_body()
-
                 visible = finder.count_visible_tweets();
-                log.debug("number of visible tweets: %d", visible)
-                lastvis = []
-                while True:
-                    lastvis.append(visible)
-                    for _ in range(5):
-                        body.send_keys(Keys.PAGE_DOWN)
-                        time.sleep(0.2)
-                    time.sleep(1)
-                    visible = finder.count_visible_tweets();
 
-                    # Exit conditions
-                    if len(lastvis) > 5:
-                        # If last five tweet counts are the same, conclude feed is done
-                        v = lastvis.pop(0)
-                        if v == visible:
-                            log.info('No more tweets are loading. Exiting.')
-                            break
-
-                    if visible > batch_size:
-
-                        log.debug("Batch size reached, printing batch")
+                # Exit conditions
+                if len(lastvis) > 5:
+                    # If last five tweet counts are the same, conclude feed is done
+                    v = lastvis.pop(0)
+                    if v == visible:
+                        log.debug('No more tweets are loading. Exiting.')
                         break
 
-                    if time.time() > (start + seconds):
+                if visible > batch_size:
 
-                        log.debug("Time limit exceeded, existing.")
-                        break
+                    log.debug("Batch size reached, printing batch")
+                    break
+
+                if time.time() > (start + seconds):
+
+                    log.debug("Time limit exceeded, existing.")
+                    break
 
 
-                log.debug("tweets read this batch: %d", visible)
+            log.debug("tweets read this batch: %d", visible)
 
-                try:
-                    # find the outer div for tweets, only by requested author
-                    tweets = finder.find_tweets_in_view(user);
-                    # get the last in the list, earliest tweet
-                    before = tweets[-1].date
-                    log.debug("earliest tweet date: %s", before)
-                    yield tweets
+            try:
+                # find the outer div for tweets, only by requested author
+                tweets = finder.find_tweets_in_view(user);
+                if len(tweets) == 0:
+                    break
+                # get the last in the list, earliest tweet
+                before = tweets[-1].date
+                log.debug("earliest tweet date: %s", before)
 
-                except Exception as e:
-                    log.error("Failed to find tweets. Error message: {}".format(e))
-                    raise
+                if not finder.search_tweets(user, date_before=before):
+                    log.debug('No tweets found before %s, exiting')
+                    break
 
-            else:
-                raise Exception("Page for user {} not found".format(user))
+                yield tweets
+
+            except Exception as e:
+                log.error("Failed to find tweets. Error message: {}".format(e))
+                raise
+
 
     yield tweets
 

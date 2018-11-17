@@ -72,10 +72,15 @@ Returns:
 
     Returns: an array of core.types.Tweet objects, in newest-first order."""
 
-        tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
-            "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
-            format(user))]
-        # Sort tweets in newest-first order, since they are read in that order
-        tweets.sort(key=lambda t: t.time, reverse=True)
+        try:
+            tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
+                "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
+                format(user))]
+            # Sort tweets in newest-first order, since they are read in that order
+            tweets.sort(key=lambda t: t.time, reverse=True)
 
-        return tweets
+            return tweets
+        except NoSuchElementException:
+
+            log.debug('No tweets found in current view')
+            return []
