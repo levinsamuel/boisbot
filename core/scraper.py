@@ -72,7 +72,7 @@ intensive, so it is recommended to read and print them in batches."""
 
                 if time.time() > (start + seconds):
 
-                    log.debug("Time limit exceeded, existing.")
+                    log.debug("Time limit exceeded, exiting.")
                     break
 
 

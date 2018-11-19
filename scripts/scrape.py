@@ -8,6 +8,7 @@ import argparse
 import sys
 import pathlib
 import os
+import logging
 
 log = mylog.get_logger("scrape")
 
@@ -25,6 +26,7 @@ parser.add_argument(
         'user', type=str, help='Name of the twitter user.',
         metavar='user')
 parser.add_argument('-f', '--file', type=str, metavar='file')
+parser.add_argument('-v', '--verbose', action='store_true', dest='v')
 parser.add_argument(
         '-s', '--seconds', type=int, metavar='seconds',
         help='Number of seconds to keep scrolling and collecting tweets',
@@ -32,6 +34,10 @@ parser.add_argument(
 
 log.debug("Arguments: {}", sys.argv)
 args = parser.parse_args(sys.argv[1:])
+
+if args.v:
+    log.setLevel(logging.DEBUG)
+    scraper.log.setLevel(logging.DEBUG)
 
 def find_and_write_tweets(user, seconds, handle):
 
