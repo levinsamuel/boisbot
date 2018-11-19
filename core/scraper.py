@@ -99,8 +99,3 @@ intensive, so it is recommended to read and print them in batches."""
 
 
     yield tweets
-
-
-def write_tweets(twts, handle):
-    for slt in twts:
-        handle.write(slt.cleantext + '\n')

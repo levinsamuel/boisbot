@@ -33,11 +33,13 @@ parser.add_argument(
 log.debug("Arguments: {}", sys.argv)
 args = parser.parse_args(sys.argv[1:])
 
-# Scrape
+def find_and_write_tweets(user, seconds, handle):
 
-sltweets = scraper.find_tweets(args.user, args.seconds)
-
-# Print
+    # Scrape
+    for sltweets in scraper.find_tweets(user, seconds):
+        # Print
+        for slt in sltweets:
+            handle.write(slt.cleantext + '\n')
 
 if args.file is not None:
     pathlib.Path("out").mkdir(exist_ok=True)
@@ -45,6 +47,6 @@ if args.file is not None:
     if os.path.exists(outf):
         os.remove(outf)
     with open(outf, "w") as twtf:
-        scraper.write_tweets(sltweets, twtf)
+        find_and_write_tweets(args.user, args.seconds, twtf)
 else:
-    scraper.write_tweets(sltweets, sys.stdout)
+    find_and_write_tweets(args.user, args.seconds, sys.stdout)
