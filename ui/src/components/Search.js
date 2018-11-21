@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import {Control, LocalForm} from 'react-redux-form';
 
 class Search extends Component {
 
