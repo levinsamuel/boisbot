@@ -17,7 +17,7 @@ log = logging.getLogger("scraper")
 # Example URL using date range search:
 # https://twitter.com/search?q=from%3Ajon_bois%20since%3A2000-01-01%20until%3A2018-06-01&src=typd
 
-def find_tweets(user, seconds=120, batch_size=250):
+def find_tweets(user, seconds=120, batch_size=250, log_path=None):
     """
 Use Selenium to scroll and find a list of tweets.
 
@@ -31,7 +31,7 @@ Returns:
 intensive, so it is recommended to read and print them in batches."""
 
 
-    with TweetFinder() as finder:
+    with TweetFinder(log_path) as finder:
 
         start = time.time()
         before = dt.date.fromtimestamp(start)

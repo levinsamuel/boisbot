@@ -28,6 +28,9 @@ parser.add_argument(
 parser.add_argument('-f', '--file', type=str, metavar='file')
 parser.add_argument('-v', '--verbose', action='store_true', dest='v')
 parser.add_argument(
+        '-l', '--chrome-log-path', dest='log_path', type=str, metavar="path",
+        help="The path to the chrome driver log file, if logging is desired.")
+parser.add_argument(
         '-s', '--seconds', type=int, metavar='seconds',
         help='Number of seconds to keep scrolling and collecting tweets',
         default=60)
@@ -42,7 +45,7 @@ if args.v:
 def find_and_write_tweets(user, seconds, handle):
 
     # Scrape
-    for sltweets in scraper.find_tweets(user, seconds):
+    for sltweets in scraper.find_tweets(user, seconds, log_path=args.log_path):
         # Print
         for slt in sltweets:
             handle.write(slt.cleantext + '\n')
