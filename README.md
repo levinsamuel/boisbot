@@ -5,7 +5,7 @@ tribute to @jon_bois
 
  - Python 3.6.x (I think something broke on python 3.7)
  - I used [virtualenv](https://virtualenv.pypa.io/en/stable/) and virtualenvwrapper ([UNIX](https://virtualenvwrapper.readthedocs.io/en/latest/), [Windows](https://pypi.org/project/virtualenvwrapper-win/))
- - [Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) is installed and on your PATH.
+ - [Chrome Driver](https://sites.google.com/a/chromium.org/chromedriver/downloads) is installed and on your PATH. WARNING: I had an issue with this with Chromium installed. I was only able to get it working with Chrome.
 
 ## Installing
 
