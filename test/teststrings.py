@@ -19,10 +19,10 @@ class StringsTest(unittest.TestCase):
 
         mytweet="we wrote a bunch of scary short stories at @sbnation. i wrote one about a pitcher with a 0.11 era"
         result=strings.clean(mytweet)
-        print(result)
+        log.debug("Tweet 1 cleaned: %s", result)
 
         result=strings.clean(mytweet2)
-        print(result)
+        log.debug("Tweet 2 cleaned: %s", result)
 
     def test_split(self):
 
