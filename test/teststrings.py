@@ -17,7 +17,8 @@ class StringsTest(unittest.TestCase):
 
     def test_clean(self):
 
-        mytweet="we wrote a bunch of scary short stories at @sbnation. i wrote one about a pitcher with a 0.11 era"
+        mytweet="we wrote a bunch of scary short stories at @sbnation. i wrote \
+one about a pitcher with a 0.11 era"
         result=strings.clean(mytweet)
         log.debug("Tweet 1 cleaned: %s", result)
 
@@ -27,4 +28,8 @@ class StringsTest(unittest.TestCase):
     def test_split(self):
 
         words = [w for line in mytweet2.split('\n') for w in line.split(' ')]
+        log.debug(words)
+
+        words = [w for w in strings.clean(mytweet2, True).\
+                replace('\n', ' \n ').split(' ')]
         log.debug(words)
