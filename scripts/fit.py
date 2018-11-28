@@ -3,7 +3,7 @@
 
 from core import scraper
 from core.util import mylog
-from core.util import data
+from core.util.data import CharacterSequence, WordSequence
 import logging
 import argparse
 import sys
@@ -44,7 +44,7 @@ args = parser.parse_args(sys.argv[1:])
 with open(args.training_data) as f:
     inputdata = f.read()
 
-X, y, char_map = data.preprocess(inputdata)
+X, y, char_map = CharacterSequence.preprocess(inputdata)
 
 # This import is slow, import after checking arguments.
 import core.model.keras.impl as kimpl

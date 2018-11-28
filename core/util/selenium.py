@@ -28,7 +28,7 @@ class TweetFinder:
                 else []
 
         self.browser = webdriver.Chrome(
-                chrome_options=opts,
+                options=opts,
                 service_args=sa
         )
 

@@ -124,4 +124,4 @@ Arguments:
                         weights_file = wf.name
                         loss = wf.loss
 
-        return path + "/" + weights_file
+        return path + "/" + weights_file if weights_file is not None else None
