@@ -18,10 +18,10 @@ class TweetFinder:
 
     def __init__(self, log_path=None):
         opts = Options();
-        opts.add_experimental_option("useAutomationExtension", False);
+        # opts.add_experimental_option("useAutomationExtension", False);
         # opts.add_argument('--headless')
-        opts.add_argument('--no-sandbox')
-        opts.add_argument('--disable-dev-shm-usage')
+        # opts.add_argument('--no-sandbox')
+        # opts.add_argument('--disable-dev-shm-usage')
 
         sa = ["--verbose", f"--log-path={log_path}"] \
                 if log_path is not None \
