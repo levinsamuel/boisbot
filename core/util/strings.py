@@ -23,11 +23,11 @@ other characters like numbers and punctuation"""
 
     # @type inp: str
     # @type ret: str
-    ret = normalize_word_separators(inp)
+    ret = _normalize_word_separators(inp)
     pat = _stripnonword if strip_non_word else _stripnonsentence
     ret = pat.sub(string=ret, repl="")
     return ret
 
-def normalize_word_separators(inp):
+def _normalize_word_separators(inp):
 
     return _word_seps.sub(string=inp, repl=" ")
