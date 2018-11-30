@@ -63,12 +63,19 @@ in dataX.'''
 class WordSequence:
     """Create input sequences based on words."""
 
+    def __init__(self, inputstr):
+        words = WordSequence._get_words_from_input(inputstr)
+        self.word_counts = WordSequence._count_words(words)
+        self.words_sorted = WordSequence._sort_words(self.word_counts)
+
+    @staticmethod
     def _get_words_from_input(inputstr):
 
         cln = strings.clean(inputstr, strip_non_word=True)
-        words = cln.split(' ')
-        return WordSequence._count_words(words)
+        words = cln.split()
+        return words
 
+    @staticmethod
     def _count_words(words):
         wordmap = {w: 0 for w in words}
         for w in words:
@@ -76,12 +83,14 @@ class WordSequence:
         log.debug("Word map: %s", wordmap)
         return wordmap
 
+    @staticmethod
     def _sort_words(word_map):
 
         words_sorted = sorted(word_map.keys(), reverse=True,
                               key=lambda w: word_map[w])
         return words_sorted
 
+    @staticmethod
     def _create_char_slices(inputstr, char_map, seq_length=100):
         '''Create all slices of length equal to seq_length from the entire
 input string, as well as the next character in an associated array.
@@ -106,6 +115,7 @@ dataX.'''
 
         return dataX, dataY
 
+    @staticmethod
     def preprocess(inputstr):
         '''Process the input string into shape usable by the neural network.
 
@@ -114,9 +124,9 @@ Returns:
     y: The result data class in sparse vector form.
     char_map: The map from input character to numeric code.'''
 
-        word_counts = WordSequence._get_words_from_input(inputstr)
+        word_seq = WordSequence(inputstr)
 
-        word_map = {c: i for i, c in enumerate(wordcounts.keys())}
+        word_map = {c: i for i, c in enumerate(wordseq.word_counts.keys())}
         # Number of distinct characters
         chardict = len(chars)
 

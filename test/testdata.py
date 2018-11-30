@@ -15,7 +15,7 @@ inputstr = ("yall wanna come over, play with my dog, edit a "
             "videos lately and i weigh more than you")
 
 
-class TestDataUtils(unittest.TestCase):
+class TestCharacterDataUtils(unittest.TestCase):
 
     def setUp(self):
         log.setLevel(mylog.logging.INFO)
@@ -43,26 +43,40 @@ class TestDataUtils(unittest.TestCase):
         log.debug("Output data:\nX:%s\ny:%s", X[0], y)
         log.info("Dimensions of X: %s", X.shape)
 
+
+class TestWordDataUtils(unittest.TestCase):
+
+    def setUp(self):
+        log.setLevel(mylog.logging.INFO)
+
     def test_list_to_map(self):
 
         words = ['the', 'it', 'why', 'the', 'pool', 'steve', 'the', 'why']
         wordmap = WordSequence._count_words(words)
         log.info("Word map: %s", wordmap)
+        self.assertEqual(3, wordmap['the'])
+        self.assertEqual(1, wordmap['steve'])
+        try:
+            threw = False
+            wordmap['nowayjose']
+            self.fail("Should throw, and not get here")
+        except KeyError:
+            pass
 
     def test_count_words(self):
 
         log.setLevel(logging.DEBUG)
-        with open("data/5mintweets2.txt", "r") as f:
+        with open("data/15min.tw", "r") as f:
             input = f.read()
 
-        word_counts = WordSequence._get_words_from_input(input)
-        log.debug("found %d distinct words.", len(word_counts))
-        words_sorted = WordSequence._sort_words(word_counts)
-        top20 = {words_sorted[i]: word_counts[words_sorted[i]]
+        word_seq = WordSequence(input)
+        log.debug("found %d distinct words.", len(word_seq.word_counts))
+        top20 = {word_seq.words_sorted[i]:
+                 word_seq.word_counts[word_seq.words_sorted[i]]
                  for i in range(20)}
 
         log.debug("20 most common: %s", top20)
         occurring_once = [x for x in filter(
-                lambda w: word_counts[w] == 1, words_sorted
+                lambda w: word_seq.word_counts[w] == 1, word_seq.words_sorted
         )]
         log.debug("Number only occurring once: %d", len(occurring_once))
