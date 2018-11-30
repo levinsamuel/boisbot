@@ -17,15 +17,16 @@ class TweetFinder:
     """Class for handling Selenium-based tweet searches"""
 
     def __init__(self, log_path=None):
-        opts = Options();
+
+        opts = Options()
         # opts.add_experimental_option("useAutomationExtension", False);
         # opts.add_argument('--headless')
         # opts.add_argument('--no-sandbox')
         # opts.add_argument('--disable-dev-shm-usage')
 
         sa = ["--verbose", f"--log-path={log_path}"] \
-                if log_path is not None \
-                else []
+            if log_path is not None \
+            else []
 
         self.browser = webdriver.Chrome(
                 options=opts,
@@ -53,7 +54,7 @@ Returns:
     True if tweets by this user are found, False if not."""
 
     # Sample url with dates:
-    #https://twitter.com/search?f=tweets&q=from%3Ajon_bois%20-filter%3Aretweets%20-filter%3Areplies&src=typd
+    # https://twitter.com/search?f=tweets&q=from%3Ajon_bois%20-filter%3Aretweets%20-filter%3Areplies&src=typd
 
         # Date in yyyy-mm-dd format
         url = (f"https://twitter.com/search?f=tweets&q=from%3A{user}"
@@ -88,10 +89,12 @@ Returns:
     Returns: an array of core.types.Tweet objects, in newest-first order."""
 
         try:
-            tweets = [Tweet(html) for html in self.browser.find_elements_by_xpath(
+            tweets = [Tweet(html)
+                      for html in self.browser.find_elements_by_xpath(
                 "//div[contains(@class, 'tweet')][@data-screen-name='{}']".
                 format(user))]
-            # Sort tweets in newest-first order, since they are read in that order
+            # Sort tweets in newest-first order, since they are read in that
+            # order
             tweets.sort(key=lambda t: t.time, reverse=True)
 
             return tweets

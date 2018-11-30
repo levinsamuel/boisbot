@@ -6,6 +6,7 @@ import datetime as dt
 log = mylog.get_logger('testtypes')
 log.setLevel(mylog.logging.DEBUG)
 
+
 class TestTypes(unittest.TestCase):
 
     def test_create_filename(self):
@@ -15,7 +16,6 @@ class TestTypes(unittest.TestCase):
 
         wf = WeightsFile(None, None, "jb")
         log.debug("filename: %s", wf.create_filename())
-
 
     def test_dates(self):
 

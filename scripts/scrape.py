@@ -42,6 +42,7 @@ if args.v:
     log.setLevel(logging.DEBUG)
     scraper.log.setLevel(logging.DEBUG)
 
+
 def find_and_write_tweets(user, seconds, handle):
 
     # Scrape
@@ -49,6 +50,7 @@ def find_and_write_tweets(user, seconds, handle):
         # Print
         for slt in sltweets:
             handle.write(slt.cleantext + '\n')
+
 
 if args.file is not None:
     pathlib.Path("out").mkdir(exist_ok=True)

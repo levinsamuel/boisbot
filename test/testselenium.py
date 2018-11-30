@@ -9,9 +9,10 @@ from core.types import Tweet
 from core.util.selenium import TweetFinder
 
 log = mylog.get_logger("testselenium")
-sclog = scraper.log;
+sclog = scraper.log
 sclog.setLevel(mylog.logging.DEBUG)
 log.setLevel(mylog.logging.DEBUG)
+
 
 class SeleniumTest(unittest.TestCase):
 
@@ -19,11 +20,12 @@ class SeleniumTest(unittest.TestCase):
 
         user = os.environ.get("TWUSER", "deepestcat")
         sc = int(os.environ.get("SECONDS", 5))
-        tweets = [t for tl in scraper.find_tweets(user, seconds=sc) for t in tl]
+        tweets = [t for tl in scraper.find_tweets(user, seconds=sc)
+                  for t in tl]
         log.debug("Tweets: %s", tweets)
         self.assertTrue(tweets is not None and len(tweets) > 0)
 
-        tweet=tweets[0]
+        tweet = tweets[0]
         # @type tweet Tweet
         log.debug(tweet.cleantext)
         log.debug(tweet.time)
@@ -37,9 +39,10 @@ class SeleniumTest(unittest.TestCase):
 
     def test_end_when_none_found(self):
 
-        tweets = [t for tl in scraper.find_tweets('deepestcat', seconds=60)\
+        tweets = [t for tl in scraper.find_tweets('deepestcat', seconds=60)
                   for t in tl]
         log.debug("Found %d", len(tweets))
+
 
 class SeleniumTestLong(unittest.TestCase):
 
@@ -49,7 +52,9 @@ class SeleniumTestLong(unittest.TestCase):
         secs = 900
         start = time.time()
         numtw = 0
-        for tl in scraper.find_tweets("jon_bois", seconds=secs, batch_size=250):
+        for tl in scraper.find_tweets(
+                "jon_bois", seconds=secs, batch_size=250):
+
             mx = max(t.time for t in tl)
             mn = min(t.time for t in tl)
             log.debug("earliest tweet date: %s", dt.date.fromtimestamp(mn))

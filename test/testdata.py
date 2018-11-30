@@ -12,8 +12,7 @@ inputstr = ("yall wanna come over, play with my dog, edit a "
             "documentary im making with byyourlogic\n"
             "i would like to personally challenge conor mcgregor to a fight. "
             "i will destroy you in combat. ive been watching a lot of mma "
-            "videos lately and i weigh more than you"
-            )
+            "videos lately and i weigh more than you")
 
 
 class TestDataUtils(unittest.TestCase):
@@ -30,7 +29,8 @@ class TestDataUtils(unittest.TestCase):
         chars = sorted(set(inputstr))
         char_map = {c: i for i, c in enumerate(chars)}
         seq_length = 100
-        dataX, dataY = CharacterSequence._create_char_slices(inputstr, char_map, seq_length)
+        dataX, dataY = CharacterSequence._create_char_slices(
+                inputstr, char_map, seq_length)
         log.debug("Output data:\nX:%s\ny:%s", dataX[0], dataY)
         log.info("Characters, seq length: %d, %d", len(inputstr), seq_length)
         log.info("dataX dimensions: %dx%d",
@@ -58,7 +58,7 @@ class TestDataUtils(unittest.TestCase):
         word_counts = WordSequence._get_words_from_input(input)
         log.debug("found %d distinct words.", len(word_counts))
         words_sorted = WordSequence._sort_words(word_counts)
-        top20 = {words_sorted[i]: word_counts[words_sorted[i]] \
+        top20 = {words_sorted[i]: word_counts[words_sorted[i]]
                  for i in range(20)}
 
         log.debug("20 most common: %s", top20)

@@ -10,14 +10,14 @@ class CharacterSequence:
     """Create input sequences based on characters."""
 
     def _create_char_slices(inputstr, char_map, seq_length=100):
-        '''Create all slices of length equal to seq_length from the entire input
-    string, as well as the next character in an associated array.
+        '''Create all slices of length equal to seq_length from the entire
+input string, as well as the next character in an associated array.
 
-    Returns:
-        dataX: N slices of the input string in an array, each slice of length
-    seq_length
-        dataY: N instances of the next character after the corresponding slice in
-    dataX.'''
+Returns:
+    dataX: N slices of the input string in an array, each slice of length
+seq_length
+    dataY: N instances of the next character after the corresponding slice
+in dataX.'''
         # Count characters and create map to integers
 
         charcount = len(inputstr)
@@ -33,7 +33,6 @@ class CharacterSequence:
 
         return dataX, dataY
 
-
     def preprocess(inputstr):
         '''Process the input string into shape usable by the neural network.
 
@@ -48,7 +47,8 @@ class CharacterSequence:
 
         # Create sub sequences of a fixed length to feed to network
         seq_length = 100
-        dataX, dataY = CharacterSequence._create_char_slices(inputstr, char_map, seq_length)
+        dataX, dataY = CharacterSequence._create_char_slices(
+                inputstr, char_map, seq_length)
         n_patterns = len(dataX)
         log.debug("Total Patterns: ", n_patterns)
 
@@ -59,7 +59,9 @@ class CharacterSequence:
 
         return X, dataY, char_map
 
+
 class WordSequence:
+    """Create input sequences based on words."""
 
     def _get_words_from_input(inputstr):
 
@@ -80,12 +82,9 @@ class WordSequence:
                               key=lambda w: word_map[w])
         return words_sorted
 
-
-    """Create input sequences based on words."""
-
     def _create_char_slices(inputstr, char_map, seq_length=100):
-        '''Create all slices of length equal to seq_length from the entire input
-    string, as well as the next character in an associated array.
+        '''Create all slices of length equal to seq_length from the entire
+input string, as well as the next character in an associated array.
 
 Returns:
     dataX: N slices of the input string in an array, each slice of length
@@ -106,7 +105,6 @@ dataX.'''
         log.debug("Total Patterns: %d", n_patterns)
 
         return dataX, dataY
-
 
     def preprocess(inputstr):
         '''Process the input string into shape usable by the neural network.

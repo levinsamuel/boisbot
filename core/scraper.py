@@ -17,9 +17,9 @@ log = logging.getLogger("scraper")
 # Example URL using date range search:
 # https://twitter.com/search?q=from%3Ajon_bois%20since%3A2000-01-01%20until%3A2018-06-01&src=typd
 
+
 def find_tweets(user, seconds=120, batch_size=250, log_path=None):
-    """
-Use Selenium to scroll and find a list of tweets.
+    """Use Selenium to scroll and find a list of tweets.
 
 Options:
     user: twitter user to search.
@@ -29,7 +29,6 @@ Options:
 Returns:
     A generator of tweet array batches. Reading the tweets can be memory-
 intensive, so it is recommended to read and print them in batches."""
-
 
     with TweetFinder(log_path) as finder:
 
@@ -46,7 +45,7 @@ intensive, so it is recommended to read and print them in batches."""
 
             body = finder.get_body()
 
-            visible = finder.count_visible_tweets();
+            visible = finder.count_visible_tweets()
             log.debug("number of visible tweets: %d", visible)
             lastvis = []
             while True:
@@ -55,11 +54,12 @@ intensive, so it is recommended to read and print them in batches."""
                     body.send_keys(Keys.PAGE_DOWN)
                     time.sleep(0.2)
                 time.sleep(1)
-                visible = finder.count_visible_tweets();
+                visible = finder.count_visible_tweets()
 
                 # Exit conditions
                 if len(lastvis) > 5:
-                    # If last five tweet counts are the same, conclude feed is done
+                    # If last five tweet counts are the same, conclude feed is
+                    # done
                     v = lastvis.pop(0)
                     if v == visible:
                         log.debug('No more tweets are loading. Exiting.')
@@ -75,12 +75,11 @@ intensive, so it is recommended to read and print them in batches."""
                     log.debug("Time limit exceeded, exiting.")
                     break
 
-
             log.debug("tweets read this batch: %d", visible)
 
             try:
                 # find the outer div for tweets, only by requested author
-                tweets = finder.find_tweets_in_view(user);
+                tweets = finder.find_tweets_in_view(user)
                 if len(tweets) == 0:
                     break
                 # get the last in the list, earliest tweet
@@ -96,6 +95,5 @@ intensive, so it is recommended to read and print them in batches."""
             except Exception as e:
                 log.error("Failed to find tweets. Error message: {}".format(e))
                 raise
-
 
     yield tweets
