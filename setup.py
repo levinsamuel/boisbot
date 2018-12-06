@@ -5,7 +5,8 @@ setup(
     name='boisbot',
     version='0.1',
     packages=find_packages(exclude=['test', 'test*.py']),
-    scripts=['scripts/scrape.py', 'scripts/fit.py', 'scripts/predict.py'],
+    scripts=['scripts/scrape.py', 'scripts/fit.py', 'scripts/predict.py',
+             'scripts/restservice.py'],
 
     author='Sam',
     author_email='levinsamuel000@gmail.com',
