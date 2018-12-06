@@ -13,6 +13,12 @@ mytweet2 = """my favorite hitters to watch ever:
 4. willie mcgee (swung like he wished baseball was never invented)
 5. francoeur (likely had never heard of baseball)"""
 
+mytweet3 = ("Fighting in the Age of Loneliness, a two-hour documentary i made "
+            "with @ByYourLogic, is now complete. it’s one of my favorite "
+            "things i’ve ever made: "
+            "https://www.youtube.com/playlist?list=PLUXSZMIiUfFRSunlJERh9k1RFN"
+            "nGGhnzG …pic.twitter.com/lQD6dyWdzF")
+
 
 class StringsTest(unittest.TestCase):
 
@@ -25,6 +31,9 @@ class StringsTest(unittest.TestCase):
 
         result = strings.clean(mytweet2)
         log.debug("Tweet 2 cleaned: %s", result)
+
+        result = strings.clean(mytweet3, strip_urls=True)
+        log.debug("Tweet 3 cleaned: %s", result)
 
     def test_split(self):
 

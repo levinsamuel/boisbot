@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.options import Options
 
 from core.types import Tweet
-from core.util import mylog
+from core.util import mylog, web
 
 log = mylog.get_logger("seleniumutils")
 
@@ -53,15 +53,7 @@ Parameters:
 Returns:
     True if tweets by this user are found, False if not."""
 
-    # Sample url with dates:
-    # https://twitter.com/search?f=tweets&q=from%3Ajon_bois%20-filter%3Aretweets%20-filter%3Areplies&src=typd
-
-        # Date in yyyy-mm-dd format
-        url = (f"https://twitter.com/search?f=tweets&q=from%3A{user}"
-               "%20-filter%3Aretweets%20-filter%3Areplies")
-        if date_before is not None:
-            url += f"%20until%3A{date_before.isoformat()}"
-
+        url = web.query_url(user, date_before)
         log.debug("Querying URL: %s", url)
         self.browser.get(url)
         try:
