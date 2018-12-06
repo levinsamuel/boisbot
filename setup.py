@@ -15,6 +15,10 @@ setup(
         'tensorflow',
         'selenium',
         'numpy',
-        'beautifulsoup4'
+        'beautifulsoup4',
+        'Flask',
+        'flask-jsonpify',
+        'flask-sqlalchemy',
+        'flask-restful'
     ]
 )
