@@ -1,7 +1,6 @@
 from core.types import Tweet
-from bs4 import BeautifulSoup as bsoup
-from urllib import request as req
 from core.util import mylog
+from core.util.bsoup import Parser
 import logging
 
 log = mylog.get_logger('webutils')
@@ -10,8 +9,10 @@ log = mylog.get_logger('webutils')
 def get_icon(user):
 
     url = page_url(user)
-    tpage = req.urlopen(url=url)
-    tsoup = bsoup(tpage, 'html.parser')
+    p = Parser(url)
+    img = p.soup.find(name='img', attrs={'class': 'ProfileAvatar-image'})
+    img_url = img.attrs['src']
+    return img_url
 
 
 def query_url(user, date_before=None):
