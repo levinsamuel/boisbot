@@ -37,7 +37,8 @@ class Search extends Component {
   }
 
   handleSubmit(values) {
-    console.log('values', values)
+    console.debug('values', values);
+    this.props.fetchIcon(values.user);
   }
 }
 
