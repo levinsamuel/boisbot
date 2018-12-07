@@ -8,7 +8,7 @@ import Search from './Search';
 import {fetchIcon} from '../redux/creators';
 
 const mapStateToProps = state => ({
-  main: state.main
+  search: state.search
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -27,7 +27,10 @@ class Main extends Component {
         <Header/>
         <Switch>
           <Route exact path="/" component={
-            () => <Search fetchIcon={this.props.fetchIcon}/>
+            () => <Search
+              fetchIcon={this.props.fetchIcon}
+              loading={this.props.search.loading}
+            />
           }/>
           <Redirect to="/"/>
         </Switch>

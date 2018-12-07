@@ -3,7 +3,7 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import {createForms} from 'react-redux-form';
-import {Reducer, initialState} from './reducer';
+import {SearchReducer, initialState} from './reducer';
 
 const initialSearchState = {
   user: ''
@@ -12,9 +12,9 @@ const initialSearchState = {
 export const ConfigureStore = () => {
   const store = createStore(
     combineReducers({
-      main: Reducer,
+      search: SearchReducer,
       ...createForms({
-        search: initialSearchState
+        searchForm: initialSearchState
       })
     }),
     applyMiddleware(thunk, logger)
