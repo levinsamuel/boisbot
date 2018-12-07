@@ -38,9 +38,14 @@ class Search extends Component {
               </Row>
             </Form>
           </div>
+        </div>
+        <div className="row row-content">
           <div className="col-12">
             <BounceLoader size={60} color="#1e90ff"
                 loading={this.props.loading}/>
+          </div>
+          <div className="col-sm-6">
+            <Icon imgurl={this.props.iconUrl}/>
           </div>
         </div>
       </div>
@@ -50,6 +55,19 @@ class Search extends Component {
   handleSubmit(values) {
     console.debug('values', values);
     this.props.fetchIcon(values.user);
+  }
+}
+
+const Icon = (props) => {
+
+  if (props.imgurl) {
+    return (
+      <div className="icon">
+        <img className="icon-img" src={props.imgurl}/>
+      </div>
+    )
+  } else {
+    return (<div></div>)
   }
 }
 
