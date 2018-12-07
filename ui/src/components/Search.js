@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label,
-  Input, Col} from 'reactstrap';
+import {Breadcrumb, BreadcrumbItem, Button, Label,
+  Input, Col, Row} from 'reactstrap';
 import {Link} from 'react-router-dom';
-import {Control, LocalForm} from 'react-redux-form';
+import {Control, Form} from 'react-redux-form';
 
 class Search extends Component {
 
@@ -19,18 +19,22 @@ class Search extends Component {
             <h3>Search for a user</h3>
           </div>
           <div className="row row-content">
-            <LocalForm onSubmit={this.handleSubmit}>
-              <div className="form-group">
+            <Form model="search" onSubmit={this.handleSubmit}>
+              <Row className="form-group">
+                <Col>
                 <Label htmlFor="usersearch">Twitter Username</Label>
-                <Control.text className="form-control" type="search" name="username"
-                    placeholder="Twitter User" model=".user"/>
-
-              </div>
-              <div className="form-group">
-                <Button>Search
-                </Button>
-              </div>
-            </LocalForm>
+                  <Control.text className="form-control" type="search"
+                      name="user" id="user"
+                      placeholder="Twitter User" model=".user"/>
+                </Col>
+              </Row>
+              <Row className="form-group">
+                <Col>
+                  <Button>Search
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
           </div>
         </div>
     );

@@ -7,16 +7,13 @@ import Footer from './Footer';
 import Search from './Search';
 import {fetchIcon} from '../redux/creators';
 
-function mapStateToProps(state) {
-  // return an object with same keys and values as state
-  return state;
-}
+const mapStateToProps = state => ({
+  main: state.main
+});
 
-function mapDispatchToProps(dispatch) {
-  return {
-    fetchIcon: user => dispatch(fetchIcon(user))
-  }
-}
+const mapDispatchToProps = dispatch => ({
+  fetchIcon: user => dispatch(fetchIcon(user))
+})
 
 class Main extends Component {
 

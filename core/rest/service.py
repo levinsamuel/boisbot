@@ -1,8 +1,10 @@
 #!python
 from flask import Flask, jsonify
+from flask_cors import CORS
 from core.util import web
 
 app = Flask('twitter service')
+CORS(app)
 
 
 @app.route('/user/<user>/icon', methods=['GET'])

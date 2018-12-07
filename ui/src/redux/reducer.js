@@ -1,9 +1,10 @@
 
 
-export const initialState = {
-
-};
-
-export const Reducer = (state = initialState, action) => {
-  return state;
+export const Reducer = (state = {
+  icon: null
+}, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
 };

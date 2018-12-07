@@ -1,6 +1,7 @@
 from core.types import Tweet
 from core.util import mylog
 from core.util.bsoup import Parser
+from core.errors import NotFound
 import logging
 
 log = mylog.get_logger('webutils')
@@ -11,6 +12,8 @@ def get_icon(user):
     url = page_url(user)
     p = Parser(url)
     img = p.soup.find(name='img', attrs={'class': 'ProfileAvatar-image'})
+    if img is None:
+        raise NotFound(url, "Could not find a valid account for user: " + user)
     img_url = img.attrs['src']
     return img_url
 

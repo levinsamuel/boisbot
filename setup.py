@@ -20,6 +20,7 @@ setup(
         'Flask',
         'flask-jsonpify',
         'flask-sqlalchemy',
-        'flask-restful'
+        'flask-restful',
+        'flask-cors'
     ]
 )
