@@ -12,14 +12,13 @@ export const fetchIcon = user => dispatch => {
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error(response.message);
+          console.error('Response not ok:', response)
+          throw new Error(response.statusText);
         }
       })
       .then(response => dispatch(showUser(response.url)))
       .then(() => dispatch(actions.reset('searchForm')))
-      .catch(error => {
-        console.error("failed request: ", error.message)
-      });
+      .catch(error => dispatch(userNotFound(error)));
 }
 
 const load = () => ({
@@ -30,3 +29,14 @@ const showUser = iconUrl => ({
   type: Actions.SHOW_USER,
   payload: iconUrl
 })
+
+const userNotFound = error => {
+  console.error('error:', error);
+  return {
+    type: Actions.USER_NOT_FOUND,
+    payload: {
+      error,
+      code: 404
+    }
+  }
+}
