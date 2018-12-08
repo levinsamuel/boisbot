@@ -6,67 +6,58 @@ import numpy
 log = mylog.get_logger('datautils')
 
 
+def preprocess(data_container, seq_length=100):
+    '''Process the input string into shape usable by the neural network.
+
+Returns:
+X: The multi-dimensional input training data.
+y: The result data class in sparse vector form.
+char_map: The map from input character to numeric code.'''
+
+    # Number of distinct characters
+    word_dict = len(data_container.word_map)
+    word_count = len(data_container.words)
+
+    # Create sub sequences of a fixed length to feed to network
+    dataX = []
+    dataY = []
+    for i in range(0, word_count - seq_length):
+        seq_in = data_container.words[i:i + seq_length]
+        seq_out = data_container.words[i + seq_length]
+        dataX.append([data_container.word_map[word] for word in seq_in])
+        dataY.append(data_container.word_map[seq_out])
+
+    n_patterns = len(dataX)
+    log.debug("Total Patterns: %d", n_patterns)
+
+    # reshape X to be [samples, time steps, features]
+    X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
+    # normalize
+    X = X / float(word_count)
+
+    return X, dataY
+
+
 class CharacterSequence:
     """Create input sequences based on characters."""
 
-    def _create_char_slices(inputstr, char_map, seq_length=100):
-        '''Create all slices of length equal to seq_length from the entire
-input string, as well as the next character in an associated array.
-
-Returns:
-    dataX: N slices of the input string in an array, each slice of length
-seq_length
-    dataY: N instances of the next character after the corresponding slice
-in dataX.'''
-        # Count characters and create map to integers
-
-        charcount = len(inputstr)
-        dataX = []
-        dataY = []
-        for i in range(0, charcount - seq_length):
-            seq_in = inputstr[i:i + seq_length]
-            seq_out = inputstr[i + seq_length]
-            dataX.append([char_map[char] for char in seq_in])
-            dataY.append(char_map[seq_out])
-        n_patterns = len(dataX)
-        log.debug("Total Patterns: %d", n_patterns)
-
-        return dataX, dataY
-
-    def preprocess(inputstr):
-        '''Process the input string into shape usable by the neural network.
-
-    Returns:
-        X: The multi-dimensional input training data.
-        y: The result data class in sparse vector form.
-        char_map: The map from input character to numeric code.'''
+    def __init__(self, inputstr):
+        self.words = inputstr  # string is already char array basically
         chars = sorted(set(inputstr))
-        char_map = {c: i for i, c in enumerate(chars)}
-        # Number of distinct characters
-        chardict = len(chars)
-
-        # Create sub sequences of a fixed length to feed to network
-        seq_length = 100
-        dataX, dataY = CharacterSequence._create_char_slices(
-                inputstr, char_map, seq_length)
-        n_patterns = len(dataX)
-        log.debug("Total Patterns: ", n_patterns)
-
-        # reshape X to be [samples, time steps, features]
-        X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
-        # normalize
-        X = X / float(chardict)
-
-        return X, dataY, char_map
+        # self.counts = WordSequence._count_words(self.words)
+        # self.words_sorted = WordSequence._sort_words(self.counts)
+        self.word_map = {c: i for i, c in enumerate(chars)}
 
 
 class WordSequence:
     """Create input sequences based on words."""
 
     def __init__(self, inputstr):
-        words = WordSequence._get_words_from_input(inputstr)
-        self.word_counts = WordSequence._count_words(words)
-        self.words_sorted = WordSequence._sort_words(self.word_counts)
+        self.words = WordSequence._get_words_from_input(inputstr)
+        self.counts = WordSequence._count_words(self.words)
+        self.words_sorted = WordSequence._sort_words(self.counts)
+        self.word_map = {c: i for i, c in
+                         enumerate(self.counts.keys())}
 
     @staticmethod
     def _get_words_from_input(inputstr):
@@ -90,55 +81,8 @@ class WordSequence:
                               key=lambda w: word_map[w])
         return words_sorted
 
-    @staticmethod
-    def _create_char_slices(inputstr, char_map, seq_length=100):
-        '''Create all slices of length equal to seq_length from the entire
-input string, as well as the next character in an associated array.
-
-Returns:
-    dataX: N slices of the input string in an array, each slice of length
-seq_length
-    dataY: N instances of the next character after the corresponding slice in
-dataX.'''
-        # Count characters and create map to integers
-
-        wordcount = len(inputstr.split(' '))
-        dataX = []
-        dataY = []
-        for i in range(0, charcount - seq_length):
-            seq_in = inputstr[i:i + seq_length]
-            seq_out = inputstr[i + seq_length]
-            dataX.append([char_map[char] for char in seq_in])
-            dataY.append(char_map[seq_out])
-        n_patterns = len(dataX)
-        log.debug("Total Patterns: %d", n_patterns)
-
-        return dataX, dataY
-
-    @staticmethod
-    def preprocess(inputstr):
-        '''Process the input string into shape usable by the neural network.
-
-Returns:
-    X: The multi-dimensional input training data.
-    y: The result data class in sparse vector form.
-    char_map: The map from input character to numeric code.'''
-
-        word_seq = WordSequence(inputstr)
-
-        word_map = {c: i for i, c in enumerate(wordseq.word_counts.keys())}
-        # Number of distinct characters
-        chardict = len(chars)
-
-        # Create sub sequences of a fixed length to feed to network
-        seq_length = 100
-        dataX, dataY = _create_char_slices(inputstr, char_map, seq_length)
-        n_patterns = len(dataX)
-        log.debug("Total Patterns: ", n_patterns)
-
-        # reshape X to be [samples, time steps, features]
-        X = numpy.reshape(dataX, (n_patterns, seq_length, 1))
-        # normalize
-        X = X / float(chardict)
-
-        return X, dataY, char_map
+    def no_more_than(self, occurences):
+        ftrd = [x for x in filter(
+                lambda w: self.counts[w] <= occurences, self.words_sorted
+                )]
+        return ftrd

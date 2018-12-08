@@ -3,7 +3,7 @@
 import unittest
 import logging
 from functools import reduce
-from core.util import mylog
+from core.util import mylog, data
 from core.util.data import CharacterSequence, WordSequence
 
 log = mylog.get_logger('testdatautils')
@@ -20,26 +20,21 @@ class TestCharacterDataUtils(unittest.TestCase):
     def setUp(self):
         log.setLevel(mylog.logging.INFO)
 
-    def test_create_char_slices(self):
+    def test_preprocess(self):
         # Count characters and create map to integers
 
         log.debug("input string: %s", inputstr)
         self.assertEqual(250, len(inputstr))
+        dataseq = CharacterSequence(inputstr)
 
-        chars = sorted(set(inputstr))
-        char_map = {c: i for i, c in enumerate(chars)}
         seq_length = 100
-        dataX, dataY = CharacterSequence._create_char_slices(
-                inputstr, char_map, seq_length)
-        log.debug("Output data:\nX:%s\ny:%s", dataX[0], dataY)
+        X, y = data.preprocess(dataseq, seq_length)
+        log.debug("Output data:\nX:%s\ny:%s", X[0], y)
         log.info("Characters, seq length: %d, %d", len(inputstr), seq_length)
-        log.info("dataX dimensions: %dx%d",
-                 len(dataX), len(dataX[0]))
-        self.assertEqual(250 - seq_length, len(dataX))
+        log.info("X dimensions: %dx%d",
+                 len(X), len(X[0]))
+        self.assertEqual(250 - seq_length, len(X))
 
-    def test_preprocess(self):
-
-        X, y, char_map = CharacterSequence.preprocess(inputstr)
         log.debug("Output data:\nX:%s\ny:%s", X[0], y)
         log.info("Dimensions of X: %s", X.shape)
 
@@ -70,13 +65,13 @@ class TestWordDataUtils(unittest.TestCase):
             input = f.read()
 
         word_seq = WordSequence(input)
-        log.debug("found %d distinct words.", len(word_seq.word_counts))
+        log.debug("found %d distinct words.", len(word_seq.counts))
         top20 = {word_seq.words_sorted[i]:
-                 word_seq.word_counts[word_seq.words_sorted[i]]
+                 word_seq.counts[word_seq.words_sorted[i]]
                  for i in range(20)}
 
         log.debug("20 most common: %s", top20)
-        occurring_once = [x for x in filter(
-                lambda w: word_seq.word_counts[w] == 1, word_seq.words_sorted
-        )]
+        occurring_once = word_seq.no_more_than(1)
         log.debug("Number only occurring once: %d", len(occurring_once))
+        twice = word_seq.no_more_than(2)
+        log.debug("Number no more than twice: %d", len(twice))
