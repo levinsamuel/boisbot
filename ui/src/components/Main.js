@@ -30,6 +30,7 @@ class Main extends Component {
             () => <Search
               fetchIcon={this.props.fetchIcon}
               loading={this.props.search.loading}
+              user={this.props.search.user}
               iconUrl={this.props.search.icon}
             />
           }/>

@@ -39,14 +39,12 @@ class Search extends Component {
             </Form>
           </div>
         </div>
-        <div className="row row-content">
+        <div className="row row-content align-items-center">
           <div className="col-12">
             <BounceLoader size={60} color="#1e90ff"
                 loading={this.props.loading}/>
           </div>
-          <div className="col-sm-6">
-            <Icon imgurl={this.props.iconUrl}/>
-          </div>
+          <Icon imgurl={this.props.iconUrl} user={this.props.user}/>
         </div>
       </div>
     );
@@ -62,9 +60,20 @@ const Icon = (props) => {
 
   if (props.imgurl) {
     return (
-      <div className="icon">
-        <img className="icon-img" src={props.imgurl}/>
-      </div>
+      <>
+        <div className="col-12 col-sm-5">
+          <div className="icon">
+            <img className="icon-img" src={props.imgurl}/>
+          </div>
+        </div>
+        <div className="col-12 col-sm-5">
+          <div className="handle">
+            <a href={`https://twitter.com/${props.user}`} target="_blank">
+              <h4>{'@' + props.user}</h4>
+            </a>
+          </div>
+        </div>
+      </>
     )
   } else {
     return (<div></div>)

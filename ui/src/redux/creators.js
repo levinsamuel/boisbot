@@ -4,7 +4,7 @@ import BASEURL from '../shared/baseUrl';
 
 export const fetchIcon = user => dispatch => {
 
-  dispatch(load());
+  dispatch(load(user));
   return fetch(BASEURL + 'user/' + user + '/icon', {
         credentials: 'same-origin'
       })
@@ -21,8 +21,9 @@ export const fetchIcon = user => dispatch => {
       .catch(error => dispatch(userNotFound(error)));
 }
 
-const load = () => ({
-  type: Actions.LOADING_USER
+const load = user => ({
+  type: Actions.LOADING_USER,
+  payload: user
 })
 
 const showUser = iconUrl => ({
