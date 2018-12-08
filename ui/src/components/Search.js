@@ -39,12 +39,9 @@ class Search extends Component {
             </Form>
           </div>
         </div>
-        <div className="row row-content align-items-center">
-          <div className="col-12">
-            <BounceLoader size={60} color="#1e90ff"
-                loading={this.props.loading}/>
-          </div>
-          <Icon imgurl={this.props.iconUrl} user={this.props.user}/>
+        <div className="row row-content align-items-center justify-content-center">
+          <Icon imgurl={this.props.iconUrl} user={this.props.user}
+              loading={this.props.loading}/>
         </div>
       </div>
     );
@@ -74,6 +71,14 @@ const Icon = (props) => {
           </div>
         </div>
       </>
+    )
+  } else if (props.loading) {
+    return (
+      <div className="col-12 col-sm-5">
+        <BounceLoader size={60} color="#1e90ff"
+            loading={props.loading}
+            className="justify-content-center"/>
+      </div>
     )
   } else {
     return (<div></div>)
