@@ -67,10 +67,10 @@ with open(args.file) as f:
 from core.model.keras.impl import TextGenerator
 
 # X is (No. of sequences x sequence length x 1)
-X, y, char_map = data.preprocess(inputstr)
+X, y = data.preprocess(inputstr)
 log.debug("X shape: %s", X.shape)
-model = TextGenerator(X.shape[1], len(char_map.keys()),
-                      "model/" + weights, user=args.user)
+model = TextGenerator(X.shape[1], len(char_map.keys()), user=args.user)
+model.load_weights("model/" + weights)
 
 chardict = len(char_map.keys())
 seq_length = X.shape[1]

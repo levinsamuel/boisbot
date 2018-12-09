@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from core import scraper
-from core.util import mylog
+from core.util import mylog, data
 from core.util.data import CharacterSequence, WordSequence
 import logging
 import argparse
@@ -37,17 +37,34 @@ parser.add_argument(
         help='Number of samples to take each time updating gradient',
         metavar='batch_size', dest='bs', default=128)
 
+parser.add_argument(
+        '-w', '--word-based', action='store_true',
+        help='analyze with words as the basic unit instead of characters',
+        dest='word_based')
+
+parser.add_argument(
+        '-v', '--verbose', action='store_true',
+        help='log verbose output',
+        dest='verbose')
+
 log.debug("Arguments: {}", sys.argv)
 args = parser.parse_args(sys.argv[1:])
-
+if args.verbose:
+    log.setLevel(logging.DEBUG)
 
 with open(args.training_data) as f:
     inputdata = f.read()
 
-X, y, char_map = CharacterSequence.preprocess(inputdata)
+data_seq = CharacterSequence(inputdata) if not args.word_based \
+    else WordSequence(inputdata)
+
+X, y = data.preprocess(data_seq)
 
 # This import is slow, import after checking arguments.
 import core.model.keras.impl as kimpl
-model = kimpl.TextGenerator(args.seql, len(char_map.keys()),
-                            layers=2)
+if args.verbose:
+    kimpl.log.setLevel(logging.DEBUG)
+
+model = kimpl.TextGenerator(
+    args.seql, len(data_seq.word_map.keys()), layers=2)
 model.fit(X, y, epochs=args.epochs, batch_size=args.bs)

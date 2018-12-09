@@ -14,6 +14,7 @@ class WeightsFile:
 
     def __init__(self, filename=None, layers=2, user=None):
 
+        assert layers is not None
         if filename is not None:
             fp = filename.rpartition('/')
             noext = fp[2].rpartition('.')[0]
