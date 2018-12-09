@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Breadcrumb, BreadcrumbItem, Button, Label,
-  Input, Col, Row} from 'reactstrap';
-import {Link} from 'react-router-dom';
+// Breadcrumb, BreadcrumbItem, Input,
+import {Button, Label, Col, Row} from 'reactstrap';
+// import {Link} from 'react-router-dom';
 import {Control, Form} from 'react-redux-form';
 import {BounceLoader} from 'react-spinners';
 
@@ -60,12 +60,13 @@ const Icon = (props) => {
       <>
         <div className="col-12 col-sm-5">
           <div className="icon">
-            <img className="icon-img" src={props.imgurl}/>
+            <img className="icon-img" src={props.imgurl} alt={`@${props.user}`}/>
           </div>
         </div>
         <div className="col-12 col-sm-5">
           <div className="handle">
-            <a href={`https://twitter.com/${props.user}`} target="_blank">
+            <a href={`https://twitter.com/${props.user}`} target="_blank"
+                rel="noopener noreferrer">
               <h4>{'@' + props.user}</h4>
             </a>
           </div>
