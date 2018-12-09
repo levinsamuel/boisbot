@@ -25,21 +25,16 @@ class Main extends Component {
     return (
       <div className="Main">
         <Header/>
-        <Switch>
-          <Route exact path="/" component={
-            () => <Search
-              fetchIcon={this.props.fetchIcon}
-              loading={this.props.search.loading}
-              user={this.props.search.user}
-              iconUrl={this.props.search.icon}
-            />
-          }/>
-          <Redirect to="/"/>
-        </Switch>
+        <Search
+            fetchIcon={this.props.fetchIcon}
+            loading={this.props.search.loading}
+            user={this.props.search.user}
+            iconUrl={this.props.search.icon}
+          />
         <Footer/>
       </div>
     );
   }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

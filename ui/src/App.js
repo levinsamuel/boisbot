@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Main from './components/Main';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter, Switch, Route, Redirect} from 'react-router-dom';
 import './styles/App.css';
 import {Provider} from 'react-redux';
 import {ConfigureStore} from './redux/configureStore'
@@ -12,7 +12,10 @@ class App extends Component {
       <Provider store={store}>
         <BrowserRouter>
           <div className="App">
-            <Main/>
+            <Switch>
+              <Route exact path="/" component={Main}/>
+              <Redirect to="/"/>
+            </Switch>
           </div>
         </BrowserRouter>
       </Provider>
