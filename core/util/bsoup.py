@@ -16,6 +16,6 @@ attribute"""
         try:
             tpage = req.urlopen(url=url)
         except HTTPError as e:
-            raise NotFound(e)
+            raise NotFound(parent=e)
 
         self.soup = bsoup(tpage, 'html.parser')

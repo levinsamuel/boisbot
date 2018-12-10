@@ -87,7 +87,7 @@ intensive, so it is recommended to read and print them in batches."""
                 log.debug("earliest tweet date: %s", before)
 
                 if not finder.search_tweets(user, date_before=before):
-                    log.debug('No tweets found before %s, exiting')
+                    log.debug('No tweets found before %s, exiting', before)
                     break
 
                 yield tweets

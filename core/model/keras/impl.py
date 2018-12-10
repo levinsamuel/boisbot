@@ -19,7 +19,7 @@ log.setLevel(mylog.logging.INFO)
 
 pp = pprint.PrettyPrinter(indent=2)
 
-checkpoint_path_default = "out/checkpoints"
+checkpoint_path_default = "build/checkpoints"
 
 
 class TextGenerator():

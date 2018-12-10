@@ -10,8 +10,8 @@ from core.util.selenium import TweetFinder
 
 log = mylog.get_logger("testselenium")
 sclog = scraper.log
-sclog.setLevel(mylog.logging.DEBUG)
-log.setLevel(mylog.logging.DEBUG)
+sclog.setLevel(mylog.logging.INFO)
+log.setLevel(mylog.logging.INFO)
 
 
 class SeleniumTest(unittest.TestCase):
@@ -49,11 +49,16 @@ class SeleniumTestLong(unittest.TestCase):
     def test_limit(self):
 
         # Tweet.log.setLevel(mylog.logging.DEBUG)
-        secs = 900
+        user = os.environ.get("BBTEST_USER", "jon_bois")
+        secs = int(os.environ.get("BBTEST_SECONDS", 15))
+        if secs == 15:
+            log.info(("Long test is using default settings. Change the "
+                      "user to scrape with environment variable BBTEST_USER, "
+                      "and the run time with BBTEST_SECONDS."))
         start = time.time()
         numtw = 0
         for tl in scraper.find_tweets(
-                "jon_bois", seconds=secs, batch_size=250):
+                user, seconds=secs, batch_size=250):
 
             mx = max(t.time for t in tl)
             mn = min(t.time for t in tl)

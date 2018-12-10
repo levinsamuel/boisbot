@@ -53,8 +53,8 @@ def find_and_write_tweets(user, seconds, handle):
 
 
 if args.file is not None:
-    pathlib.Path("out").mkdir(exist_ok=True)
-    outf = "out/{}".format(args.file)
+    pathlib.Path("build/scraper").mkdir(exist_ok=True)
+    outf = "build/scraper/{}".format(args.file)
     if os.path.exists(outf):
         os.remove(outf)
     with open(outf, "w") as twtf:

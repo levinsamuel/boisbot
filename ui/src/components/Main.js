@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-//import {Switch, Route, Redirect, withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Header from './Header';
 import Footer from './Footer';
@@ -37,4 +37,4 @@ class Main extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

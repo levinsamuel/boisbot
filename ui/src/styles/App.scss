@@ -1,4 +1,5 @@
 $header-color: #1e90ff;
+$border-color: #15202b;
 
 @mixin bluetheme {
   background: $header-color;
@@ -24,10 +25,14 @@ h3 {
   min-height: 80px
 }
 
+a {
+  color: $header-color;
+}
+
 .icon {
   width: 200px;
   height: 200px;
-  border: 5px solid #15202b;
+  border: 5px solid $border-color;
   border-radius: 50%;
   z-index: 3;
   position: relative;

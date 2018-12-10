@@ -16,7 +16,7 @@ log.setLevel(mylog.logging.INFO)
 # types.log.setLevel(mylog.logging.DEBUG)
 mylog.get_logger('kerasimpl').setLevel(logging.DEBUG)
 
-cpath_base = "out/tests/checkpoints"
+cpath_base = "build/tests/checkpoints"
 
 
 class TestKeras(unittest.TestCase):

@@ -14,7 +14,7 @@ class TestTypes(unittest.TestCase):
         fn = WeightsFile._get_checkpoint_file(None, 'jb', 20, 1.2, 3)
         log.debug("Filename: %s", fn)
 
-        wf = WeightsFile(None, None, "jb")
+        wf = WeightsFile(None, 2, "jb")
         log.debug("filename: %s", wf.create_filename())
 
     def test_dates(self):

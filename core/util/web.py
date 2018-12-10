@@ -13,7 +13,10 @@ def get_icon(user):
     p = Parser(url)
     img = p.soup.find(name='img', attrs={'class': 'ProfileAvatar-image'})
     if img is None:
-        raise NotFound(url, "Could not find a valid account for user: " + user)
+        raise NotFound(
+            url=url,
+            msg="Could not find a valid account for user: " + user)
+
     img_url = img.attrs['src']
     return img_url
 
