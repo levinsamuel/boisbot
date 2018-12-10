@@ -3,6 +3,7 @@ import pathlib
 import time
 import os
 import pprint
+import shutil
 from keras.models import Sequential, load_model
 from keras.layers import Dense
 from keras.layers import Dropout
@@ -33,7 +34,8 @@ untrained.
 
 Arguments:
     user: The user this model is created for.
-    layers: The number of intermediate layers to create."""
+    layers: The number of intermediate layers to create.
+    checkpoint_path: where to write checkpoint files to keep progress."""
 
         self.checkpoint_path = checkpoint_path + "/inprocess"
 
@@ -43,7 +45,6 @@ Arguments:
         if weights_file is not None:
             wf = WeightsFile(weights_file)
             # The number of intermediate layers don't count the file layer.
-            layers = wf.layers - 1
             log.debug(("Weights file detected: %s. "
                        "Loading layers from that file: %d"),
                       weights_file, layers)
@@ -95,24 +96,26 @@ Arguments:
         self.model.fit(X, y, epochs=epochs, batch_size=batch_size,
                        callbacks=self.callbacks_list)
 
-        self.cleanup(self.checkpoint_path)
+        self.cleanup()
 
     def predict(self, val, verbose=0):
         # @type self.model Sequential
         return self.model.predict(val, verbose=verbose)
 
-    def cleanup(self, cpath):
+    def cleanup(self):
         """Move best weight to done directory and cleanup in process dir"""
 
         finished_weights = TextGenerator.find_best_weight(self.checkpoint_path)
-        done = finished_weights.replace('inprocess', 'done')
-        log.debug("Moving best weight (%s) to done folder: %s",
-                  finished_weights, done)
+        if finished_weights is not None:
+            done = finished_weights.replace('inprocess', 'done')
+            log.debug("Moving best weight (%s) to done folder: %s",
+                      finished_weights, done)
 
-        os.renames(finished_weights, done)
-        if pathlib.Path(done).exists():
-            # TODO remove in process Files
-            pass
+            os.renames(finished_weights, done)
+            if pathlib.Path(done).exists():
+                # TODO remove in process Files
+                shutil.rmtree(self.checkpoint_path, ignore_errors=True)
+                pass
 
     @staticmethod
     def find_best_weight(path):

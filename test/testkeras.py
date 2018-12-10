@@ -3,8 +3,10 @@
 import unittest
 import pathlib
 import shutil
+import logging
 from core.model.keras.impl import TextGenerator
 from core.util import mylog, data
+from core.util.data import CharacterSequence
 from core.types import WeightsFile
 from test import testdata
 from keras.utils import np_utils
@@ -12,25 +14,35 @@ from keras.utils import np_utils
 log = mylog.get_logger('testkeras')
 log.setLevel(mylog.logging.INFO)
 # types.log.setLevel(mylog.logging.DEBUG)
+mylog.get_logger('kerasimpl').setLevel(logging.DEBUG)
+
+cpath_base = "out/tests/checkpoints"
 
 
 class TestKeras(unittest.TestCase):
 
-    def test_create_model(self):
+    def __init__(self, name):
 
-        X, y, char_map = data.preprocess(testdata.inputstr)
+        super().__init__(name)
+        data_seq = CharacterSequence(testdata.inputstr)
+        X, y = data.preprocess(data_seq)
         y = np_utils.to_categorical(y)
         log.info("y shape: %s", y.shape)
-        self.assertEqual(len(char_map.keys()), y.shape[1],
+        self.assertEqual(len(data_seq.word_map.keys()), y.shape[1],
                          ("The number of characters in the dictionary should "
                           "match the number number of y columns."))
         seq_length = 100
-        model = TextGenerator(seq_length, y.shape[1])
+        self.model = TextGenerator(seq_length, y.shape[1],
+                                   checkpoint_path=cpath_base)
+
+    def tearDown(self):
+        """Make sure files get cleaned up"""
+        self.model.cleanup()
 
     def test_find_weights(self):
 
-        cpath = "out/tests/checkpoints/inprocess/"
-        shutil.rmtree(cpath, ignore_errors=True)
+        shutil.rmtree(cpath_base, ignore_errors=True)
+        cpath = cpath_base + '/inprocess'
         pathlib.Path(cpath).mkdir(exist_ok=True, parents=True)
         for i in range(20):
             fn = WeightsFile.get_checkpoint_file(cpath)
@@ -43,3 +55,8 @@ class TestKeras(unittest.TestCase):
         log.info("Weights file: %s", weights_file)
 
         self.assertEqual(lastwf, weights_file)
+
+        self.assertTrue(pathlib.Path(cpath).exists())
+        self.model.cleanup()
+        self.assertFalse(pathlib.Path(cpath).exists())
+        self.assertTrue(pathlib.Path(cpath_base + '/done').exists())
