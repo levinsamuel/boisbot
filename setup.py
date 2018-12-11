@@ -4,7 +4,8 @@ from setuptools import setup, find_packages
 setup(
     name='boisbot',
     version='0.1',
-    packages=find_packages(exclude=['test', 'test*.py']),
+    packages=find_packages('src'),
+    package_dir={'':'src'},
     scripts=['scripts/scrape.py', 'scripts/fit.py', 'scripts/predict.py',
              'scripts/restservice.py'],
 
