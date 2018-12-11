@@ -1,4 +1,4 @@
-﻿# boisbot
+# boisbot
 tribute to @jon_bois
 
 ## Requirements
@@ -9,4 +9,6 @@ tribute to @jon_bois
 
 ## Installing
 
- 1. `pip install -r requirements.txt`
+ 1. Create a virtual environment for this project, see `virtualenv` above for documentation.
+ 2. `pip install -r requirements.txt` or
+ 3. `python setup.py install` or `python setup.py develop` as you please
