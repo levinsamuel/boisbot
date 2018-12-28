@@ -23,15 +23,15 @@ class Search extends Component {
           <div className="col-12">
             <Form model="searchForm" onSubmit={this.handleSubmit}>
               <Row className="form-group">
-                <Col>
-                <Label htmlFor="usersearch">Twitter Username</Label>
+                <Col className="col-12 col-md-5">
+                  <Label htmlFor="usersearch">Twitter Username</Label>
                   <Control.text className="form-control" type="search"
                       name="user" id="user"
                       placeholder="Twitter User" model=".user"/>
                 </Col>
               </Row>
               <Row className="form-group">
-                <Col>
+                <Col className="">
                   <Button disabled={this.props.loading}>Search
                   </Button>
                 </Col>
@@ -58,12 +58,12 @@ const Icon = (props) => {
   if (props.imgurl) {
     return (
       <>
-        <div className="col-12 col-sm-5">
+        <div className="col-auto">
           <div className="icon">
             <img className="icon-img" src={props.imgurl} alt={`@${props.user}`}/>
           </div>
         </div>
-        <div className="col-12 col-sm-5">
+        <div className="col-auto">
           <div className="handle">
             <a href={`https://twitter.com/${props.user}`} target="_blank"
                 rel="noopener noreferrer">

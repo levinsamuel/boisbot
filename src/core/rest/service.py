@@ -7,7 +7,6 @@ from core.util import web
 def create_service(prefix):
 
     app = Flask('twitter service')
-    CORS(app)
     p = prefix if prefix == '' or prefix[0] == '/'\
         else ('' if prefix is None else '/' + prefix)
 
