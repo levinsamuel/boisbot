@@ -2,7 +2,6 @@ absl-py==0.6.0
 aniso8601==4.0.1
 astor==0.7.1
 beautifulsoup4==4.6.3
--e git+git@github.com:levinsamuel/boisbot.git@8fec87f59fe81ef6669fea4d274bfed7d7e1ad30#egg=boisbot
 click==7.0
 flask==1.0.2
 flask-cors==3.0.7
@@ -22,7 +21,7 @@ markupsafe==1.1.0
 numpy==1.15.3
 protobuf==3.6.1
 pytz==2018.7
-PyYAML==3.13
+PyYAML==4.2b1
 scipy==1.1.0
 selenium==3.14.1
 six==1.11.0
