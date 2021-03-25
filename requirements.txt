@@ -21,7 +21,7 @@ markupsafe==1.1.0
 numpy==1.15.3
 protobuf==3.6.1
 pytz==2018.7
-PyYAML==4.2b1
+PyYAML==5.4
 scipy==1.1.0
 selenium==3.14.1
 six==1.11.0
